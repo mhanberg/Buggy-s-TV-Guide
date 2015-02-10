@@ -14,5 +14,6 @@
 	<classpathentry kind="lib" path="src/lib/jna-4.1.0.jar"/>
 	<classpathentry kind="lib" path="src/lib/jna-platform-4.1.0.jar"/>
 	<classpathentry kind="lib" path="src/lib/slf4j-api-1.7.10.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Austin/Documents/CS408/Buggy-s-TV-Guide/src/lib/slf4j-simple-1.7.10.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
