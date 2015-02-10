@@ -1,5 +1,3 @@
-import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import twitter4j.*;
 import java.awt.Desktop;
@@ -31,7 +29,7 @@ public class exportTwitterGUI {
         d.browse(new URI(authURL));
         
         // Prompt user for PIN and set
-        final String pin = JOptionPane.showInputDialog(null,"Please enter activation pin here", null);
+        final String pin = JOptionPane.showInputDialog(null,"Please see your browser for authentication", "Twitter Authorization",JOptionPane.QUESTION_MESSAGE);
         workingTweet.setPin(pin);
         
         // Attempt to finish the authorization and send the tweet
