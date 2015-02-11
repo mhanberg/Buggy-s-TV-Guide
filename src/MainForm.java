@@ -8,6 +8,9 @@ import javax.swing.JList;
 
 import java.awt.List;
 
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+
 public class MainForm
 {
 	private JFrame frame;
@@ -29,6 +32,13 @@ public class MainForm
 		JButton searchButton = new JButton("Search");
 		searchButton.setBounds(335, 10, 89, 23);
 		frame.getContentPane().add(searchButton);
+		
+		searchButton.addActionListener(new ActionListener() {
+			public void actionPerformed (ActionEvent e){
+				Search searchResult = new Search();
+				searchResult.setVisible(true);
+			}
+		});
 		
 		List shows = new List();
 		shows.setBounds(10, 44, 200, 207);
