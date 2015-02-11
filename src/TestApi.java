@@ -12,7 +12,7 @@ public class TestApi {
 		TheTVDBApi tvDB = new TheTVDBApi("956FCE4039291BF8");
 		List<Series> results = new ArrayList<Series>();
 		try{
-		results = tvDB.searchSeries("Better Call Saul", "en");
+		results = tvDB.searchSeries("The Simpsons", "en");
 		}catch (Exception a){
 			
 		}
@@ -26,8 +26,8 @@ public class TestApi {
 		
 		Series fullDetails = tvDB.getSeries(id, "en");
 		
-		System.out.println(fullDetails.getAirsDayOfWeek());
-		System.out.println(fullDetails.getAirsTime());
+		//System.out.println(fullDetails.getAirsDayOfWeek());
+		//System.out.println(fullDetails.getAirsTime());
 		
 		List<Episode> episodes = new ArrayList<Episode>();
 		try {
@@ -36,29 +36,40 @@ public class TestApi {
 			
 		}
 		
-		Episode episodeData = episodes.get(3);
-		System.out.println(episodeData.getFirstAired());
+		int size = episodes.size();
+		
+		for (int i = 0; i < size; i++) {
+		Episode episodeData = episodes.get(i);
+		//System.out.println(episodeData.getFirstAired());
 		String airDate = episodeData.getFirstAired();
 		DateFormat format = new SimpleDateFormat("yyyy-M-d");
 		Date date = null;
 		try {
+			if (airDate.equals("")) {
+				continue;
+			}
 			date = format.parse(airDate);
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		System.out.println(date);
+		//System.out.println(date);
 		
 		Date currentDate = new Date();
 		//System.out.println(currentDate);
 		
 		if (date.after(currentDate)) {
-			System.out.println("Episode is upcoming");
+			System.out.println("Next episode is: " + date);
+			System.out.println("Episode airs at: " + fullDetails.getAirsTime());
+			break;
+			/*return*/
 		} else if (date.before(currentDate)) {
-			System.out.println("Episode is already out");
 		} else {
 			System.out.println("Episode comes out today");
 		}
 		
+		}
+		
+		/*if haven't returned yet, return a string that says no upcoming episode */
 	}
 }
