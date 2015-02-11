@@ -19,11 +19,13 @@ import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.JList;
 import javax.swing.AbstractListModel;
+import javax.swing.DefaultListModel;
 
 
 public class Search extends JFrame {
 	private JTextField textField;
-	private final JList list = new JList();
+	private JList list;
+	private DefaultListModel listModel;
 	JScrollPane scroll;
 	private JButton btnNewButton;
 	
@@ -43,7 +45,11 @@ public class Search extends JFrame {
 		});
 		btnSearch.setBounds(335, 10, 89, 23);
 		getContentPane().add(btnSearch);
-
+		
+		listModel = new DefaultListModel();
+		listModel.addElement("Archer");
+		
+		list = new JList(listModel);
 		list.setBounds(20, 42, 404, 241);
 		scroll = new JScrollPane(list);
 		scroll.setSize(322, 275);
@@ -77,6 +83,14 @@ public class Search extends JFrame {
 		});
 		btnSearch.setBounds(335, 10, 89, 23);
 		getContentPane().add(btnSearch);
+		
+		listModel = new DefaultListModel();
+		for (int i=0; i<searchResults.size(); i++){
+			listModel.addElement(searchResults.get(i).getSeriesName());
+		}
+		
+		
+		list = new JList(listModel);
 
 		list.setBounds(20, 42, 404, 241);
 		scroll = new JScrollPane(list);

@@ -11,6 +11,9 @@ import java.awt.List;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
+import thetvdbapi.*;
+import thetvdbapi.model.*;
+
 public class MainForm
 {
 	private JFrame frame;
@@ -35,7 +38,13 @@ public class MainForm
 		
 		searchButton.addActionListener(new ActionListener() {
 			public void actionPerformed (ActionEvent e){
-				Search searchResult = new Search();
+				TheTVDBApi tvdb = new TheTVDBApi("956FCE4039291BF8");
+				Search searchResult;
+				try{
+					searchResult = new Search(tvdb.searchSeries(searchText.getText(), "en"));
+				} catch (Exception asdf){
+					searchResult = new Search();
+				}
 				searchResult.setVisible(true);
 			}
 		});
