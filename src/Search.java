@@ -30,7 +30,8 @@ public class Search extends JFrame {
 	JScrollPane scroll;
 	private JButton btnNewButton;
 	
-	public Search(){
+	public Search(final MainForm form){
+		super("Search Results");
 		setBounds(100, 100, 459, 386);
 		getContentPane().setLayout(null);
 		
@@ -45,9 +46,9 @@ public class Search extends JFrame {
 				TheTVDBApi tvdb = new TheTVDBApi("956FCE4039291BF8");
 				Search searchResult;
 				try{
-					searchResult = new Search(tvdb.searchSeries(textField.getText(), "en"));
+					searchResult = new Search(tvdb.searchSeries(textField.getText(), "en"), form);
 				} catch (Exception asdf){
-					searchResult = new Search();
+					searchResult = new Search(form);
 				}
 				searchResult.setVisible(true);
 			}
@@ -76,7 +77,7 @@ public class Search extends JFrame {
 		
 	}
 	
-	public Search(List<Series> searchResults){
+	public Search(List<Series> searchResults, final MainForm form){
 		setBounds(100, 100, 459, 386);
 		getContentPane().setLayout(null);
 		
@@ -91,9 +92,9 @@ public class Search extends JFrame {
 				TheTVDBApi tvdb = new TheTVDBApi("956FCE4039291BF8");
 				Search searchResult;
 				try{
-					searchResult = new Search(tvdb.searchSeries(textField.getText(), "en"));
+					searchResult = new Search(tvdb.searchSeries(textField.getText(), "en"), form);
 				} catch (Exception asdf){
-					searchResult = new Search();
+					searchResult = new Search(form);
 				}
 				searchResult.setVisible(true);
 			}
@@ -118,6 +119,8 @@ public class Search extends JFrame {
 		btnNewButton = new JButton("Go To Show");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				Popup p = new Popup((String)list.getSelectedValue(), form);
+				p.setVisible(true);
 			}
 		});
 		btnNewButton.setBounds(335, 159, 89, 23);

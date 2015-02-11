@@ -19,10 +19,12 @@ public class MainForm
 	private JFrame frame;
 	private JTextField searchText;
 	private List times;
+	private List shows;
 
 	public MainForm()
 	{
-		frame = new JFrame();
+		final MainForm form = this;
+		frame = new JFrame("Buggy's TV Guide");
 		frame.setBounds(100, 100, 450, 300);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
@@ -41,26 +43,40 @@ public class MainForm
 				TheTVDBApi tvdb = new TheTVDBApi("956FCE4039291BF8");
 				Search searchResult;
 				try{
-					searchResult = new Search(tvdb.searchSeries(searchText.getText(), "en"));
+					searchResult = new Search(tvdb.searchSeries(searchText.getText(), "en"), form);
 				} catch (Exception asdf){
-					searchResult = new Search();
+					searchResult = new Search(form);
 				}
 				searchResult.setVisible(true);
 			}
 		});
 		
-		List shows = new List();
+		shows = new List();
 		shows.setBounds(10, 44, 200, 207);
 		frame.getContentPane().add(shows);
 		
 		times = new List();
 		times.setBounds(224, 44, 200, 207);
 		frame.getContentPane().add(times);
+	}
+	
+	public boolean showAlreadyInList(String showName)
+	{
+		for(int i=0;i<shows.getItemCount();i++)
+			if(shows.getItems()[i].equals(showName))
+				return true;
 		
-		shows.add("Archer");
-		shows.add("It's Always Sunny in Philidelphia");
-		
-		times.add("Archer - \"Vision Quest\" - 2/5/15 6:30pm - FXX");
+		return false;
+	}
+	
+	public void addShow(String showName)
+	{
+		shows.add(showName);
+	}
+	
+	public void removeShow(String showName)
+	{
+		shows.remove(showName);
 	}
 
 	public static void main(String[] args)
