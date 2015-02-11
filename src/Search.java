@@ -3,6 +3,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import thetvdbapi.TheTVDBApi;
 import thetvdbapi.model.*;
 
 import java.util.List;
@@ -41,6 +42,14 @@ public class Search extends JFrame {
 		JButton btnSearch = new JButton("Search");
 		btnSearch.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				TheTVDBApi tvdb = new TheTVDBApi("956FCE4039291BF8");
+				Search searchResult;
+				try{
+					searchResult = new Search(tvdb.searchSeries(textField.getText(), "en"));
+				} catch (Exception asdf){
+					searchResult = new Search();
+				}
+				searchResult.setVisible(true);
 			}
 		});
 		btnSearch.setBounds(335, 10, 89, 23);
@@ -79,6 +88,14 @@ public class Search extends JFrame {
 		JButton btnSearch = new JButton("Search");
 		btnSearch.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				TheTVDBApi tvdb = new TheTVDBApi("956FCE4039291BF8");
+				Search searchResult;
+				try{
+					searchResult = new Search(tvdb.searchSeries(textField.getText(), "en"));
+				} catch (Exception asdf){
+					searchResult = new Search();
+				}
+				searchResult.setVisible(true);
 			}
 		});
 		btnSearch.setBounds(335, 10, 89, 23);
@@ -86,7 +103,7 @@ public class Search extends JFrame {
 		
 		listModel = new DefaultListModel();
 		for (int i=0; i<searchResults.size(); i++){
-			listModel.addElement(searchResults.get(i).getSeriesName());
+			listModel.addElement(searchResults.get(i).getSeriesName() + " - " + searchResults.get(i).getOverview());
 		}
 		
 		
