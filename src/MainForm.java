@@ -1,18 +1,23 @@
 import java.awt.EventQueue;
-
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.JButton;
-import javax.swing.JList;
-
 import java.awt.List;
-
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-
+import java.awt.event.WindowEvent;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.PrintWriter;
+import javax.swing.JMenuBar;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
 import thetvdbapi.*;
-import thetvdbapi.model.*;
 
 public class MainForm
 {
@@ -29,35 +34,171 @@ public class MainForm
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
-		searchText = new JTextField();
-		searchText.setBounds(10, 11, 315, 20);
-		frame.getContentPane().add(searchText);
-		searchText.setColumns(10);
-		
 		JButton searchButton = new JButton("Search");
-		searchButton.setBounds(335, 10, 89, 23);
+		searchButton.setBounds(335, 30, 89, 23);
 		frame.getContentPane().add(searchButton);
 		
-		searchButton.addActionListener(new ActionListener() {
-			public void actionPerformed (ActionEvent e){
-				TheTVDBApi tvdb = new TheTVDBApi("956FCE4039291BF8");
-				Search searchResult;
-				try{
-					searchResult = new Search(tvdb.searchSeries(searchText.getText(), "en"), form);
-				} catch (Exception asdf){
-					searchResult = new Search(form);
+		searchButton.addActionListener(new ActionListener()
+		{
+			public void actionPerformed (ActionEvent e)
+			{
+				if(!searchText.getText().isEmpty())
+				{
+					TheTVDBApi tvdb = new TheTVDBApi("956FCE4039291BF8");
+					Search searchResult;
+					try
+					{
+						searchResult = new Search(tvdb.searchSeries(searchText.getText(), "en"), form);
+					}
+					catch (Exception asdf) { searchResult = new Search(form); }
+					
+					searchResult.setVisible(true);
 				}
-				searchResult.setVisible(true);
+				else
+				{
+					JOptionPane.showMessageDialog(null, "Please enter a search phrase");
+				}
 			}
 		});
 		
+		searchText = new JTextField();
+		searchText.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				if(!searchText.getText().isEmpty())
+				{
+					TheTVDBApi tvdb = new TheTVDBApi("956FCE4039291BF8");
+					Search searchResult;
+					try
+					{
+						searchResult = new Search(tvdb.searchSeries(searchText.getText(), "en"), form);
+					}
+					catch (Exception asdf) { searchResult = new Search(form); }
+					
+					searchResult.setVisible(true);
+				}
+				else
+				{
+					JOptionPane.showMessageDialog(null, "Please enter a search phrase");
+				}
+			}
+		});
+		
+		searchText.setBounds(10, 31, 315, 20);
+		frame.getContentPane().add(searchText);
+		searchText.setColumns(10);
+		
 		shows = new List();
-		shows.setBounds(10, 44, 200, 207);
+		shows.setBounds(10, 57, 200, 194);
 		frame.getContentPane().add(shows);
 		
 		times = new List();
-		times.setBounds(224, 44, 200, 207);
+		times.setBounds(224, 57, 200, 194);
 		frame.getContentPane().add(times);
+		
+		JMenuBar menuBar = new JMenuBar();
+		menuBar.setBounds(0, 0, 434, 21);
+		frame.getContentPane().add(menuBar);
+		
+		JMenu mnFile = new JMenu("File");
+		menuBar.add(mnFile);
+		
+		JMenuItem mntmSave = new JMenuItem("Save");
+		mntmSave.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				JFileChooser fc = new JFileChooser();
+				int val = fc.showSaveDialog(form.frame);
+				
+				if(val == JFileChooser.APPROVE_OPTION)
+				{
+					File file = fc.getSelectedFile();
+					if(!file.exists())
+					{
+						try
+						{
+							file.createNewFile();
+						}
+						catch (IOException e2) { e2.printStackTrace(); }
+					}
+					
+					PrintWriter writer;
+					try
+					{
+						writer = new PrintWriter(file);
+						
+						for(int i=0;i<shows.getItemCount();i++)
+							writer.println(shows.getItem(i));
+						
+						writer.flush();
+						writer.close();
+					}
+					catch (FileNotFoundException e1) {e1.printStackTrace();}
+				}
+			}
+		});
+		mnFile.add(mntmSave);
+		
+		JMenuItem mntmLoad = new JMenuItem("Load");
+		mntmLoad.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				JFileChooser fc = new JFileChooser();
+				int val = fc.showOpenDialog(form.frame);
+				
+				if(val == JFileChooser.APPROVE_OPTION)
+				{
+					File file = fc.getSelectedFile();
+					if(file.exists())
+					{
+						try
+						{
+							BufferedReader br = new BufferedReader(new FileReader(file));
+							shows.removeAll();
+							String line;
+							while((line = br.readLine()) != null)
+							{
+								shows.add(line);
+								//Joe: add showTimes of loaded shows
+							}
+							br.close();
+						}
+						catch (IOException e1) { e1.printStackTrace(); }
+					}
+					else
+					{
+						JOptionPane.showMessageDialog(form.frame, "File does not exist.");
+					}
+				}
+			}
+		});
+		mnFile.add(mntmLoad);
+		
+		JMenuItem mntmExit = new JMenuItem("Exit");
+		mntmExit.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				form.frame.dispatchEvent(new WindowEvent(form.frame, WindowEvent.WINDOW_CLOSING));
+			}
+		});
+		mnFile.add(mntmExit);
+		
+		JMenu mnExport = new JMenu("Export To...");
+		menuBar.add(mnExport);
+		
+		JMenuItem mntmTwitter = new JMenuItem("Twitter");
+		mntmTwitter.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				//Mitch: Make it export to twitter here
+			}
+		});
+		mnExport.add(mntmTwitter);
 	}
 	
 	public boolean showAlreadyInList(String showName)
@@ -94,6 +235,4 @@ public class MainForm
 			}
 		});
 	}
-	
-
 }
