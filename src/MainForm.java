@@ -16,6 +16,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Arrays;
 
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
@@ -165,8 +166,7 @@ public class MainForm
 							String line;
 							while((line = br.readLine()) != null)
 							{
-								shows.add(line);
-								//Joe: add showTimes of loaded shows
+								addShow(line);
 							}
 							br.close();
 						}
@@ -251,7 +251,9 @@ public class MainForm
 		String addShow;
 		NextEp check = new NextEp();
 		addShow = (String)check.nextEp(showName);
-		shows.add(addShow);
+		times.add(addShow);
+		shows.add(showName);
+		Arrays.sort(shows.getItems());
 	}
 	
 	public void removeShow(String showName)
