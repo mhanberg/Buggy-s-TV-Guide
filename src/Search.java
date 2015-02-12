@@ -22,38 +22,10 @@ public class Search extends JFrame
 	private JButton btnNewButton;
 	private ArrayList<String> ids = new ArrayList<String>();
 	
-	public Search(final MainForm form)
-	{
-		super("Search Results");
-		setBounds(100, 100, 459, 386);
-		getContentPane().setLayout(null);
-		
-		listModel = new DefaultListModel();
-		listModel.addElement("Archer");
-		
-		list = new JList(listModel);
-		list.setBounds(20, 42, 404, 241);
-		scroll = new JScrollPane(list);
-		scroll.setSize(322, 275);
-		scroll.setLocation(10, 42);
-		getContentPane().add(scroll);
-		
-		btnNewButton = new JButton("Go To Show");
-		btnNewButton.addActionListener(new ActionListener()
-		{
-			public void actionPerformed(ActionEvent e)
-			{
-				
-			}
-		});
-		btnNewButton.setBounds(335, 159, 89, 23);
-		getContentPane().add(btnNewButton);
-	}
-	
 	public Search(List<Series> searchResults, final MainForm form)
 	{
 		super("Search Results");
-		setBounds(100, 100, 459, 386);
+		setBounds(150, 150, 450, 300);
 		getContentPane().setLayout(null);
 		
 		listModel = new DefaultListModel();
@@ -67,13 +39,13 @@ public class Search extends JFrame
 		final TheTVDBApi tvdb = new TheTVDBApi("956FCE4039291BF8");
 		list = new JList(listModel);
 
-		list.setBounds(20, 42, 404, 241);
+		list.setBounds(10, 10, 440, 250);
 		scroll = new JScrollPane(list);
-		scroll.setSize(322, 275);
-		scroll.setLocation(10, 42);
+		scroll.setSize(415, 200);
+		scroll.setLocation(10, 10);
 		getContentPane().add(scroll);
 		
-		btnNewButton = new JButton("Go To Show");
+		btnNewButton = new JButton("Details");
 		btnNewButton.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
@@ -93,7 +65,7 @@ public class Search extends JFrame
 				}
 			}
 		});
-		btnNewButton.setBounds(335, 159, 89, 23);
+		btnNewButton.setBounds(325, 225, 100, 23);
 		getContentPane().add(btnNewButton);
 	}
 }

@@ -50,14 +50,13 @@ public class MainForm
 				if(!searchText.getText().isEmpty())
 				{
 					TheTVDBApi tvdb = new TheTVDBApi("956FCE4039291BF8");
-					Search searchResult;
 					try
 					{
-						searchResult = new Search(tvdb.searchSeries(searchText.getText(), "en"), form);
+						Search searchResult = new Search(tvdb.searchSeries(searchText.getText(), "en"), form);
+						
+						searchResult.setVisible(true);
 					}
-					catch (Exception asdf) { searchResult = new Search(form); }
-					
-					searchResult.setVisible(true);
+					catch (Exception asdf) { JOptionPane.showMessageDialog(null, "Error"); }
 				}
 				else
 				{
@@ -74,14 +73,12 @@ public class MainForm
 				if(!searchText.getText().isEmpty())
 				{
 					TheTVDBApi tvdb = new TheTVDBApi("956FCE4039291BF8");
-					Search searchResult;
 					try
 					{
-						searchResult = new Search(tvdb.searchSeries(searchText.getText(), "en"), form);
+						Search searchResult = new Search(tvdb.searchSeries(searchText.getText(), "en"), form);
+						searchResult.setVisible(true);
 					}
-					catch (Exception asdf) { searchResult = new Search(form); }
-					
-					searchResult.setVisible(true);
+					catch (Exception asdf) { JOptionPane.showMessageDialog(null, "Error");  }
 				}
 				else
 				{
@@ -258,7 +255,13 @@ public class MainForm
 	
 	public void removeShow(String showName)
 	{
-		shows.remove(showName);
+		int index;
+		for(index = 0;index<shows.getItems().length;index++)
+			if(shows.getItems()[index].equals(showName))
+				break;
+		
+		shows.remove(index);
+		times.remove(index);
 	}
 
 	public static void main(String[] args)

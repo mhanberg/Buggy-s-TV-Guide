@@ -1,7 +1,7 @@
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import java.awt.List;
-import javax.swing.JTextField;
+import javax.swing.JTextArea;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -10,12 +10,12 @@ import thetvdbapi.model.*;
 
 public class Popup extends JFrame
 {
-	private JTextField description;
+	private JTextArea description;
 
 	public Popup(final Series show, final MainForm form)
 	{
 		final Popup p = this;
-		this.setBounds(100, 100, 450, 300);
+		this.setBounds(200, 200, 450, 300);
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		this.getContentPane().setLayout(null);
 		
@@ -32,15 +32,21 @@ public class Popup extends JFrame
 		actors.setBounds(224, 36, 200, 216);
 		this.getContentPane().add(actors);
 		
-		description = new JTextField(show.getOverview());
+		description = new JTextArea(show.getOverview());
 		description.setBounds(10, 36, 200, 94);
 		this.getContentPane().add(description);
 		description.setColumns(10);
 		description.setEditable(false);
+		description.setLineWrap(true);
 		
 		List times = new List();
 		times.setBounds(10, 136, 200, 116);
 		this.getContentPane().add(times);
+		
+		String addShow;
+		NextEp check = new NextEp();
+		addShow = (String)check.nextEp(show.getSeriesName());
+		times.add(addShow);
 		
 		String buttonString = "Add";
 		if(form.showAlreadyInList(show.getSeriesName()))
