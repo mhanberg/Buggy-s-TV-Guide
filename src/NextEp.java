@@ -64,7 +64,8 @@ public class NextEp {
 		
 		if (date.after(currentDate)) {
 			String returnString = ("Next episode is: " + date + "\nEpisode airs at: " + fullDetails.getAirsTime());
-			return returnString;
+			String newString = (show + " - " + episodeData.getEpisodeName() + " - " + date + " - " + fullDetails.getAirsTime());
+			return newString;
 			/*return*/
 		} else if (date.before(currentDate)) {
 		} else {
