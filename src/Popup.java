@@ -1,19 +1,12 @@
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
 import java.awt.List;
-
 import javax.swing.JTextField;
 import javax.swing.JButton;
-
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowEvent;
-
 import thetvdbapi.model.*;
-
 
 public class Popup extends JFrame
 {
@@ -33,9 +26,9 @@ public class Popup extends JFrame
 		java.util.List<String> actorsInShow = show.getActors();
 		
 		List actors = new List();
-		for (int i = 0; i < actorsInShow.size(); i++){
+		for (int i = 0; i < actorsInShow.size(); i++)
 			actors.add(actorsInShow.get(i));
-		}
+		
 		actors.setBounds(224, 36, 200, 216);
 		this.getContentPane().add(actors);
 		
@@ -54,8 +47,10 @@ public class Popup extends JFrame
 			buttonString = "Remove";
 		
 		JButton addButton = new JButton(buttonString);
-		addButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+		addButton.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
 				if(form.showAlreadyInList(show.getSeriesName()))
 					form.removeShow(show.getSeriesName());
 				else

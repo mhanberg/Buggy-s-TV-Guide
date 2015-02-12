@@ -1,13 +1,9 @@
 import java.awt.EventQueue;
-
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.JButton;
-import javax.swing.JList;
-
 import java.awt.List;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -18,14 +14,10 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
-
-import thetvdbapi.*;
-import thetvdbapi.model.*;
-
-import javax.swing.JToolBar;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import thetvdbapi.*;
 
 public class MainForm
 {
@@ -46,17 +38,20 @@ public class MainForm
 		searchButton.setBounds(335, 30, 89, 23);
 		frame.getContentPane().add(searchButton);
 		
-		searchButton.addActionListener(new ActionListener() {
-			public void actionPerformed (ActionEvent e){
+		searchButton.addActionListener(new ActionListener()
+		{
+			public void actionPerformed (ActionEvent e)
+			{
 				if(!searchText.getText().isEmpty())
 				{
 					TheTVDBApi tvdb = new TheTVDBApi("956FCE4039291BF8");
 					Search searchResult;
-					try{
+					try
+					{
 						searchResult = new Search(tvdb.searchSeries(searchText.getText(), "en"), form);
-					} catch (Exception asdf){
-						searchResult = new Search(form);
 					}
+					catch (Exception asdf) { searchResult = new Search(form); }
+					
 					searchResult.setVisible(true);
 				}
 				else
@@ -67,17 +62,20 @@ public class MainForm
 		});
 		
 		searchText = new JTextField();
-		searchText.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+		searchText.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
 				if(!searchText.getText().isEmpty())
 				{
 					TheTVDBApi tvdb = new TheTVDBApi("956FCE4039291BF8");
 					Search searchResult;
-					try{
+					try
+					{
 						searchResult = new Search(tvdb.searchSeries(searchText.getText(), "en"), form);
-					} catch (Exception asdf){
-						searchResult = new Search(form);
 					}
+					catch (Exception asdf) { searchResult = new Search(form); }
+					
 					searchResult.setVisible(true);
 				}
 				else
@@ -86,6 +84,7 @@ public class MainForm
 				}
 			}
 		});
+		
 		searchText.setBounds(10, 31, 315, 20);
 		frame.getContentPane().add(searchText);
 		searchText.setColumns(10);
@@ -106,27 +105,33 @@ public class MainForm
 		menuBar.add(mnFile);
 		
 		JMenuItem mntmSave = new JMenuItem("Save");
-		mntmSave.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+		mntmSave.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
 				JFileChooser fc = new JFileChooser();
 				int val = fc.showSaveDialog(form.frame);
+				
 				if(val == JFileChooser.APPROVE_OPTION)
 				{
 					File file = fc.getSelectedFile();
-					if(!file.exists()) {
+					if(!file.exists())
+					{
 						try
 						{
 							file.createNewFile();
 						}
-						catch (IOException e2) {e2.printStackTrace();}
+						catch (IOException e2) { e2.printStackTrace(); }
 					}
 					
 					PrintWriter writer;
 					try
 					{
 						writer = new PrintWriter(file);
+						
 						for(int i=0;i<shows.getItemCount();i++)
 							writer.println(shows.getItem(i));
+						
 						writer.flush();
 						writer.close();
 					}
@@ -137,10 +142,13 @@ public class MainForm
 		mnFile.add(mntmSave);
 		
 		JMenuItem mntmLoad = new JMenuItem("Load");
-		mntmLoad.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+		mntmLoad.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
 				JFileChooser fc = new JFileChooser();
 				int val = fc.showOpenDialog(form.frame);
+				
 				if(val == JFileChooser.APPROVE_OPTION)
 				{
 					File file = fc.getSelectedFile();
@@ -154,7 +162,7 @@ public class MainForm
 							while((line = br.readLine()) != null)
 							{
 								shows.add(line);
-								//Joe: add showTimes
+								//Joe: add showTimes of loaded shows
 							}
 							br.close();
 						}
@@ -170,8 +178,10 @@ public class MainForm
 		mnFile.add(mntmLoad);
 		
 		JMenuItem mntmExit = new JMenuItem("Exit");
-		mntmExit.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+		mntmExit.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
 				form.frame.dispatchEvent(new WindowEvent(form.frame, WindowEvent.WINDOW_CLOSING));
 			}
 		});
@@ -181,8 +191,10 @@ public class MainForm
 		menuBar.add(mnExport);
 		
 		JMenuItem mntmTwitter = new JMenuItem("Twitter");
-		mntmTwitter.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+		mntmTwitter.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
 				//Mitch: Make it export to twitter here
 			}
 		});
