@@ -1,9 +1,11 @@
 import java.awt.EventQueue;
+
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.JButton;
+
 import java.awt.List;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -14,9 +16,11 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+
 import thetvdbapi.*;
 
 public class MainForm
@@ -196,6 +200,38 @@ public class MainForm
 			public void actionPerformed(ActionEvent e)
 			{
 				//Mitch: Make it export to twitter here
+				String twitString;
+				twitString = "I added ";
+				
+				for(int i=0;i<shows.getItemCount();i++){
+					if(shows.getItemCount() == 1){
+						twitString = twitString + shows.getItems()[i] + " ";
+						break;
+					}else if(shows.getItemCount() == 2){
+						twitString = twitString + shows.getItems()[0] + " and " + shows.getItems()[1] + " ";
+						break;
+					}else if( i-1 == shows.getItemCount()){
+						twitString = twitString + "and "+ shows.getItems()[i] + " ";
+						break;
+					}else{
+						twitString = twitString + shows.getItems()[i] + ", ";
+					}
+				}
+				twitString = twitString + "to Buggy's.";
+				
+				try {
+					exportSocial twit = new exportSocial(0, twitString);
+		            if(twit.twitStatus == 1){
+		            	System.out.println("Successfully generated URL");
+		            	System.out.println(twit.twitURL);
+		            }else{
+		            	System.out.println("Tweet was too long.");
+		            }
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					System.out.println("ERROR POSTING TO TWITTER");
+				}
+
 			}
 		});
 		mnExport.add(mntmTwitter);
