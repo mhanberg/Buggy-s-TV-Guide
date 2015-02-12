@@ -70,7 +70,7 @@ public class Search extends JFrame {
 			ids.add(searchResults.get(i).getId());
 		}
 		
-		
+		final TheTVDBApi tvdb = new TheTVDBApi("956FCE4039291BF8");
 		list = new JList(listModel);
 
 		list.setBounds(20, 42, 404, 241);
@@ -84,8 +84,12 @@ public class Search extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				if(list.getSelectedIndex() != -1)
 				{
-					Popup p = new Popup((String)list.getSelectedValue(), form);
-					p.setVisible(true);
+					try
+					{
+						Popup p = new Popup(tvdb.getSeries(ids.get(list.getSelectedIndex()), "en"), form);
+						p.setVisible(true);
+					}
+					catch(Exception popupException) { }
 				}
 				else
 				{
