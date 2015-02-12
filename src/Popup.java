@@ -14,6 +14,7 @@ public class Popup extends JFrame
 
 	public Popup(final Series show, final MainForm form)
 	{
+		super(show.getSeriesName());
 		final Popup p = this;
 		this.setBounds(200, 200, 450, 300);
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
