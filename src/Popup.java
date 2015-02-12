@@ -25,7 +25,7 @@ public class Popup extends JFrame
 		this.getContentPane().setLayout(null);
 		
 		JLabel name = new JLabel(showName);
-		name.setBounds(10, 11, 53, 14);
+		name.setBounds(10, 11, 315, 14);
 		this.getContentPane().add(name);
 		
 		List actors = new List();
