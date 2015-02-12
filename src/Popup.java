@@ -12,27 +12,34 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowEvent;
 
+import thetvdbapi.model.*;
+
 
 public class Popup extends JFrame
 {
 	private JTextField description;
 
-	public Popup(final String showName, final MainForm form)
+	public Popup(final Series show, final MainForm form)
 	{
 		final Popup p = this;
 		this.setBounds(100, 100, 450, 300);
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		this.getContentPane().setLayout(null);
 		
-		JLabel name = new JLabel(showName);
+		JLabel name = new JLabel(show.getSeriesName());
 		name.setBounds(10, 11, 315, 14);
 		this.getContentPane().add(name);
 		
+		java.util.List<String> actorsInShow = show.getActors();
+		
 		List actors = new List();
+		for (int i = 0; i < actorsInShow.size(); i++){
+			actors.add(actorsInShow.get(i));
+		}
 		actors.setBounds(224, 36, 200, 216);
 		this.getContentPane().add(actors);
 		
-		description = new JTextField();
+		description = new JTextField(show.getOverview());
 		description.setBounds(10, 36, 200, 94);
 		this.getContentPane().add(description);
 		description.setColumns(10);
@@ -43,16 +50,16 @@ public class Popup extends JFrame
 		this.getContentPane().add(times);
 		
 		String buttonString = "Add";
-		if(form.showAlreadyInList(showName))
+		if(form.showAlreadyInList(show.getSeriesName()))
 			buttonString = "Remove";
 		
 		JButton addButton = new JButton(buttonString);
 		addButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(form.showAlreadyInList(showName))
-					form.removeShow(showName);
+				if(form.showAlreadyInList(show.getSeriesName()))
+					form.removeShow(show.getSeriesName());
 				else
-					form.addShow(showName);
+					form.addShow(show.getSeriesName());
 				
 				p.dispatchEvent(new WindowEvent(p, WindowEvent.WINDOW_CLOSING));
 			}

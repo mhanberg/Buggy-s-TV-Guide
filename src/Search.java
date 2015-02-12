@@ -7,6 +7,7 @@ import thetvdbapi.TheTVDBApi;
 import thetvdbapi.model.*;
 
 import java.util.List;
+import java.util.ArrayList;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.BorderLayout;
@@ -30,6 +31,7 @@ public class Search extends JFrame {
 	private DefaultListModel listModel;
 	JScrollPane scroll;
 	private JButton btnNewButton;
+	private ArrayList<String> ids = new ArrayList<String>();
 	
 	public Search(final MainForm form){
 		super("Search Results");
@@ -65,6 +67,7 @@ public class Search extends JFrame {
 		listModel = new DefaultListModel();
 		for (int i=0; i<searchResults.size(); i++){
 			listModel.addElement(searchResults.get(i).getSeriesName() + " - " + searchResults.get(i).getOverview());
+			ids.add(searchResults.get(i).getId());
 		}
 		
 		
