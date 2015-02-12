@@ -7,6 +7,7 @@ import thetvdbapi.TheTVDBApi;
 import thetvdbapi.model.*;
 
 import java.util.List;
+import java.util.ArrayList;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.BorderLayout;
@@ -29,6 +30,7 @@ public class Search extends JFrame {
 	private DefaultListModel listModel;
 	JScrollPane scroll;
 	private JButton btnNewButton;
+	private ArrayList<String> ids = new ArrayList<String>();
 	
 	public Search(final MainForm form){
 		super("Search Results");
@@ -87,9 +89,10 @@ public class Search extends JFrame {
 		textField.setColumns(10);
 		
 		JButton btnSearch = new JButton("Search");
+		TheTVDBApi tvdb = new TheTVDBApi("956FCE4039291BF8");
 		btnSearch.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				TheTVDBApi tvdb = new TheTVDBApi("956FCE4039291BF8");
+				
 				Search searchResult;
 				try{
 					searchResult = new Search(tvdb.searchSeries(textField.getText(), "en"), form);
@@ -105,6 +108,7 @@ public class Search extends JFrame {
 		listModel = new DefaultListModel();
 		for (int i=0; i<searchResults.size(); i++){
 			listModel.addElement(searchResults.get(i).getSeriesName() + " - " + searchResults.get(i).getOverview());
+			ids.add(searchResults.get(i).getId());
 		}
 		
 		
@@ -119,8 +123,13 @@ public class Search extends JFrame {
 		btnNewButton = new JButton("Go To Show");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Popup p = new Popup((String)list.getSelectedValue(), form);
-				p.setVisible(true);
+				try{
+					Popup p = new Popup(tvdb.getSeries(ids.get(list.getSelectedIndex()), "en"), form);
+					p.setVisible(true);
+				} catch (Exception popupException){
+					
+				}
+				
 			}
 		});
 		btnNewButton.setBounds(335, 159, 89, 23);
