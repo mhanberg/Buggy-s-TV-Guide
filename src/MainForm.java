@@ -248,7 +248,10 @@ public class MainForm
 	
 	public void addShow(String showName)
 	{
-		shows.add(showName);
+		String addShow;
+		NextEp check = new NextEp();
+		addShow = (String)check.nextEp(showName);
+		shows.add(addShow);
 	}
 	
 	public void removeShow(String showName)
