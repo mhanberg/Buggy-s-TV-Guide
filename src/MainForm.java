@@ -161,10 +161,10 @@ public class MainForm
 							BufferedReader br = new BufferedReader(new FileReader(file));
 							shows.removeAll();
 							String line;
+							
 							while((line = br.readLine()) != null)
-							{
 								addShow(line);
-							}
+							
 							br.close();
 						}
 						catch (IOException e1) { e1.printStackTrace(); }
@@ -250,7 +250,6 @@ public class MainForm
 		addShow = (String)check.nextEp(showName);
 		times.add(addShow);
 		shows.add(showName);
-		Arrays.sort(shows.getItems());
 	}
 	
 	public void removeShow(String showName)
