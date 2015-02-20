@@ -56,7 +56,9 @@ public class MainForm
 						
 						searchResult.setVisible(true);
 					}
-					catch (Exception asdf) { JOptionPane.showMessageDialog(null, "Error"); }
+					catch (Exception asdf) { 
+						JOptionPane.showMessageDialog(null, "Error"); 
+						}
 				}
 				else
 				{
