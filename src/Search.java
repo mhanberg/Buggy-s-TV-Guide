@@ -36,6 +36,10 @@ public class Search extends JFrame
 			ids.add(searchResults.get(i).getId());
 		}
 		
+		if (searchResults.size() == 0){
+			listModel.addElement("No serch results available");		
+		}
+		
 		final TheTVDBApi tvdb = new TheTVDBApi("956FCE4039291BF8");
 		list = new JList(listModel);
 
@@ -57,7 +61,7 @@ public class Search extends JFrame
 						Popup p = new Popup(tvdb.getSeries(ids.get(list.getSelectedIndex()), "en"), form);
 						p.setVisible(true);
 					}
-					catch(Exception popupException) { }
+					catch(Exception popupException) { JOptionPane.showMessageDialog(null, "Connection to server failed. Check your internet connection.");}
 				}
 				else
 				{
@@ -67,5 +71,9 @@ public class Search extends JFrame
 		});
 		btnNewButton.setBounds(325, 225, 100, 23);
 		getContentPane().add(btnNewButton);
+		
+		if (searchResults.size() == 0){
+			btnNewButton.setEnabled(false);	
+		}
 	}
 }
