@@ -1,11 +1,17 @@
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JScrollPane;
+import javax.swing.ScrollPaneConstants;
+
 import java.awt.List;
+
 import javax.swing.JTextArea;
 import javax.swing.JButton;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowEvent;
+
 import thetvdbapi.model.*;
 
 public class Popup extends JFrame
@@ -35,10 +41,14 @@ public class Popup extends JFrame
 		
 		description = new JTextArea(show.getOverview());
 		description.setBounds(10, 36, 200, 94);
-		this.getContentPane().add(description);
 		description.setColumns(10);
 		description.setEditable(false);
 		description.setLineWrap(true);
+		description.setWrapStyleWord(true);
+		JScrollPane sp = new JScrollPane(description);
+		sp.setBounds(10, 36, 200, 94);;
+		sp.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		this.getContentPane().add(sp);
 		
 		List times = new List();
 		times.setBounds(10, 136, 200, 116);
