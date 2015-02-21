@@ -60,16 +60,22 @@ public class NextEp {
 		//System.out.println(date);
 		
 		Date currentDate = new Date();
-		//System.out.println(currentDate);
+		String curCheck = currentDate.toString();
+		curCheck = curCheck.substring(0, 10);
+		String concatDate = date.toString();
+		concatDate = concatDate.substring(0,  10);
+		
 		
 		if (date.after(currentDate)) {
-			String returnString = ("Next episode is: " + date + "\nEpisode airs at: " + fullDetails.getAirsTime());
-			String newString = (show + " - " + episodeData.getEpisodeName() + " - " + date + " - " + fullDetails.getAirsTime());
+			//String returnString = ("Next episode is: " + date + "\nEpisode airs at: " + fullDetails.getAirsTime());
+			String newString = (show + " - " + episodeData.getEpisodeName() + " - " + concatDate + " - " + fullDetails.getAirsTime());
 			return newString;
 			/*return*/
-		} else if (date.before(currentDate)) {
+		} else if (curCheck.equals(concatDate) == true) {
+			String newString = (show + " - " + episodeData.getEpisodeName() + " - " + concatDate + " - " + fullDetails.getAirsTime());
+			return newString;
 		} else {
-			return "Episode comes out today";
+			
 		}
 		
 		}
