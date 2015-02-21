@@ -57,7 +57,7 @@ public class MainForm
 						searchResult.setVisible(true);
 					}
 					catch (Exception asdf) { 
-						JOptionPane.showMessageDialog(null, "Error"); 
+						JOptionPane.showMessageDialog(null, "Database could not be reached. Please check your internet connection and try again."); 
 						}
 				}
 				else
@@ -80,7 +80,7 @@ public class MainForm
 						Search searchResult = new Search(tvdb.searchSeries(searchText.getText(), "en"), form);
 						searchResult.setVisible(true);
 					}
-					catch (Exception asdf) { JOptionPane.showMessageDialog(null, "Error");  }
+					catch (Exception asdf) { JOptionPane.showMessageDialog(null, "Database could not be reached. Please check your internet connection and try again.");  }
 				}
 				else
 				{
@@ -162,12 +162,20 @@ public class MainForm
 						{
 							BufferedReader br = new BufferedReader(new FileReader(file));
 							shows.removeAll();
+							times.removeAll();
 							String line;
+							boolean worked = true;
 							
 							while((line = br.readLine()) != null)
-								addShow(line);
+							{
+								if(!addShow(line))
+									worked = false;
+							}
 							
 							br.close();
+							
+							if(!worked)
+								JOptionPane.showMessageDialog(null, "There was a problem loading your file.");
 						}
 						catch (IOException e1) { e1.printStackTrace(); }
 					}
@@ -245,13 +253,19 @@ public class MainForm
 		return false;
 	}
 	
-	public void addShow(String showName)
+	public boolean addShow(String showName)
 	{
 		String addShow;
-		NextEp check = new NextEp();
-		addShow = (String)check.nextEp(showName);
-		times.add(addShow);
-		shows.add(showName);
+		try
+		{
+			NextEp check = new NextEp();
+			addShow = (String)check.nextEp(showName);
+			times.add(addShow);
+			shows.add(showName);
+		}
+		catch(Exception e) { return false; }
+		
+		return true;
 	}
 	
 	public void removeShow(String showName)
