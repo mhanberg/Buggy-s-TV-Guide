@@ -43,40 +43,42 @@ public class NextEp {
 		int size = episodes.size();
 		
 		for (int i = 0; i < size; i++) {
-		Episode episodeData = episodes.get(i);
-		//System.out.println(episodeData.getFirstAired());
-		String airDate = episodeData.getFirstAired();
-		DateFormat format = new SimpleDateFormat("yyyy-M-d");
-		Date date = null;
-		try {
-			if (airDate.equals("")) {
-				continue;
+			Episode episodeData = episodes.get(i);
+			//System.out.println(episodeData.getFirstAired());
+			String airDate = episodeData.getFirstAired();
+			DateFormat format = new SimpleDateFormat("yyyy-M-d");
+			Date date = null;
+			try {
+				if (airDate.equals("")) {
+					continue;
+				}
+				date = format.parse(airDate);
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-			date = format.parse(airDate);
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		//System.out.println(date);
-		
-		Date currentDate = new Date();
-		String curCheck = currentDate.toString();
-		curCheck = curCheck.substring(0, 10);
-		String concatDate = date.toString();
-		concatDate = concatDate.substring(0,  10);
-		
-		
-		if (date.after(currentDate)) {
-			//String returnString = ("Next episode is: " + date + "\nEpisode airs at: " + fullDetails.getAirsTime());
-			String newString = (show + " - " + episodeData.getEpisodeName() + " - " + concatDate + " - " + fullDetails.getAirsTime());
-			return newString;
-			/*return*/
-		} else if (curCheck.equals(concatDate) == true) {
-			String newString = (show + " - " + episodeData.getEpisodeName() + " - " + concatDate + " - " + fullDetails.getAirsTime());
-			return newString;
-		} else {
-			
-		}
+			//System.out.println(date);
+
+			Date currentDate = new Date();
+			String curCheck = currentDate.toString();
+			curCheck = curCheck.replaceAll("00:00:00 ", ""); //made it so the year is still kept -Mitch
+			//curCheck = curCheck.substring(0, 10); got rid of this
+			String concatDate = date.toString();
+			concatDate = concatDate.replaceAll("00:00:00 ", "");//made it so the year is still kept -Mitch
+			//concatDate = concatDate.substring(0,  10); got rid of this
+
+
+			if (date.after(currentDate)) {
+				//String returnString = ("Next episode is: " + date + "\nEpisode airs at: " + fullDetails.getAirsTime());
+				String newString = (show + " - " + episodeData.getEpisodeName() + " - " + concatDate + " - " + fullDetails.getAirsTime());
+				return newString;
+				/*return*/
+			} else if (curCheck.equals(concatDate) == true) {
+				String newString = (show + " - " + episodeData.getEpisodeName() + " - " + concatDate + " - " + fullDetails.getAirsTime());
+				return newString;
+			} else {
+
+			}
 		
 		}
 		

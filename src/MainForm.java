@@ -16,12 +16,14 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.SocketException;
 import java.util.Arrays;
 
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 
+import net.fortuna.ical4j.model.ValidationException;
 import thetvdbapi.*;
 
 public class MainForm
@@ -242,6 +244,35 @@ public class MainForm
 			}
 		});
 		mnExport.add(mntmTwitter);
+		
+		JMenuItem mntmiCal = new JMenuItem("iCal");
+		mntmiCal.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				ExportiCal newCalendar = new ExportiCal();
+				
+				for(int i = 0; i<shows.getItemCount();i++) {
+					try {
+						newCalendar.addShow(times.getItem(i));
+					} catch (SocketException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}
+				
+				try {
+					newCalendar.saveiCalFile();
+				} catch (IOException | ValidationException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
+				
+			}
+			
+		});
+		mnExport.add(mntmiCal);
 	}
 	
 	public boolean showAlreadyInList(String showName)
