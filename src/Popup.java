@@ -1,3 +1,17 @@
+import java.awt.List;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.WindowEvent;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.net.URL;
+
+import javax.swing.JTextArea;
+import javax.swing.JButton;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -5,29 +19,17 @@ import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 
-import java.awt.List;
-
-import javax.swing.JTextArea;
-import javax.swing.JButton;
-
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.WindowEvent;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-
 import thetvdbapi.TheTVDBApi;
 import thetvdbapi.model.*;
 
-import java.util.*;
-
 public class Popup extends JFrame
 {
+	private JLabel name;
+	private JButton addButton;
 	private JTextArea description;
+	private JScrollPane sp;
+	private List times;
+	private List actors;
 
 	public Popup(final Series show, final MainForm form)
 	{
@@ -37,32 +39,36 @@ public class Popup extends JFrame
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		this.getContentPane().setLayout(null);
 		
-		JLabel name = new JLabel(show.getSeriesName());
+		p.addComponentListener(new ComponentAdapter()
+		{
+			public void componentResized(ComponentEvent e)
+			{
+				resizeComponents(p.getWidth(), p.getHeight());
+			}
+		});
+		
+		name = new JLabel(show.getSeriesName());
 		name.setBounds(10, 11, 315, 14);
 		this.getContentPane().add(name);
 		
 		java.util.List<String> actorsInShow = show.getActors();
 		
-		List actors = new List();
+		actors = new List();
 		for (int i = 0; i < actorsInShow.size(); i++)
 			actors.add(actorsInShow.get(i));
 		
-		actors.setBounds(224, 36, 200, 216);
 		this.getContentPane().add(actors);
 		
 		description = new JTextArea(show.getOverview());
-		description.setBounds(10, 36, 200, 94);
 		description.setColumns(10);
 		description.setEditable(false);
 		description.setLineWrap(true);
 		description.setWrapStyleWord(true);
-		JScrollPane sp = new JScrollPane(description);
-		sp.setBounds(10, 36, 200, 94);;
+		sp = new JScrollPane(description);
 		sp.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		this.getContentPane().add(sp);
 		
-		List times = new List();
-		times.setBounds(10, 136, 200, 116);
+		times = new List();
 		this.getContentPane().add(times);
 		
 		String addShow;
@@ -74,7 +80,7 @@ public class Popup extends JFrame
 		if(form.showAlreadyInList(show.getSeriesName()))
 			buttonString = "Remove";
 		
-		JButton addButton = new JButton(buttonString);
+		addButton = new JButton(buttonString);
 		addButton.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
@@ -102,7 +108,6 @@ public class Popup extends JFrame
 		        	  } catch (Exception e){
 
 		        	  }
-		        	  
 		          }
 		        }
 		      }
@@ -133,8 +138,9 @@ public class Popup extends JFrame
 		};
 		actors.addMouseListener(mouseListener);
 
-		addButton.setBounds(335, 7, 89, 23);
 		this.getContentPane().add(addButton);
+		
+		resizeComponents(p.getWidth(), p.getHeight());
 	}
 	
 	public Popup(final Actor actor, final MainForm form)
@@ -149,14 +155,13 @@ public class Popup extends JFrame
 		name.setBounds(10, 11, 200, 14);
 		this.getContentPane().add(name);
 		
-		
 		description = new JTextArea(actor.getRole());
 		description.setBounds(10, 36, 200, 94);
 		description.setColumns(10);
 		description.setEditable(false);
 		description.setLineWrap(true);
 		description.setWrapStyleWord(true);
-		JScrollPane sp = new JScrollPane(description);
+		sp = new JScrollPane(description);
 		sp.setBounds(10, 36, 200, 94);;
 		sp.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		this.getContentPane().add(sp);
@@ -170,7 +175,15 @@ public class Popup extends JFrame
 		} catch (IOException e){
 			System.out.println("Failed Read");
 		}
-				
-		
+	}
+	
+	private void resizeComponents(int width, int height)
+	{
+		name.setBounds(10, 10, width - 120, 20);
+		addButton.setBounds(width - 105, 10, 80, 20);
+		description.setBounds(10, 40, width / 2 - 25, height / 2 - 45);
+		sp.setBounds(description.getBounds());
+		times.setBounds(10, height / 2, width / 2 - 25, height / 2 - 45);
+		actors.setBounds(width / 2, 40, width / 2 - 25, height - 85);
 	}
 }

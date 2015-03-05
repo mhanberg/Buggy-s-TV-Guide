@@ -1,14 +1,9 @@
 import java.awt.EventQueue;
-
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.JTextField;
-import javax.swing.JButton;
-
 import java.awt.List;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.WindowEvent;
 import java.io.BufferedReader;
 import java.io.File;
@@ -16,38 +11,95 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.net.SocketException;
-import java.util.Arrays;
 
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+import javax.swing.JButton;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 
-import net.fortuna.ical4j.model.ValidationException;
+//import net.fortuna.ical4j.model.ValidationException;
 import thetvdbapi.*;
 
 public class MainForm
 {
-	private JFrame frame;
-	private JTextField searchText;
-	private List times;
-	private List shows;
+	private MainForm form = this;
+	private MainFormActionListener listener = new MainFormActionListener();
+	private TheTVDBApi tvdb = new TheTVDBApi("956FCE4039291BF8");
+	
+	private JFrame frame = new JFrame("Buggy's TV Guide");
+	private JTextField searchText = new JTextField();
+	private JButton searchButton = new JButton("Search");
+	private List shows = new List();
+	private List times = new List();
+	
+	private JMenuBar menuBar = new JMenuBar();
+	private JMenu mnFile = new JMenu("File");
+	private JMenuItem mntmSave = new JMenuItem("Save");
+	private JMenuItem mntmLoad = new JMenuItem("Load");
+	private JMenuItem mntmExit = new JMenuItem("Exit");
+	private JMenu mnExport = new JMenu("Export To...");
+	private JMenuItem mntmTwitter = new JMenuItem("Twitter");
+	private JMenuItem mntmiCal = new JMenuItem("iCal");
 
 	public MainForm()
 	{
-		final MainForm form = this;
-		frame = new JFrame("Buggy's TV Guide");
 		frame.setBounds(100, 100, 450, 300);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
-		JButton searchButton = new JButton("Search");
-		searchButton.setBounds(335, 30, 89, 23);
-		frame.getContentPane().add(searchButton);
-		
-		searchButton.addActionListener(new ActionListener()
+		frame.addComponentListener(new ComponentAdapter()
 		{
-			public void actionPerformed (ActionEvent e)
+			public void componentResized(ComponentEvent e)
+			{
+				resizeComponents(frame.getWidth(), frame.getHeight());
+			}
+		});
+		
+		frame.getContentPane().add(searchText);
+		frame.getContentPane().add(searchButton);
+		frame.getContentPane().add(shows);
+		frame.getContentPane().add(times);
+		frame.getContentPane().add(menuBar);
+
+		searchText.addActionListener(listener);
+		searchButton.addActionListener(listener);
+		mntmSave.addActionListener(listener);
+		mntmLoad.addActionListener(listener);
+		mntmExit.addActionListener(listener);
+		mntmTwitter.addActionListener(listener);
+		//mntmiCal.addActionListener(listener);
+		
+		menuBar.add(mnFile);
+		menuBar.add(mnExport);
+		
+		mnFile.add(mntmSave);
+		mnFile.add(mntmLoad);
+		mnFile.add(mntmExit);
+		
+		mnExport.add(mntmTwitter);
+		mnExport.add(mntmiCal);
+		
+		resizeComponents(frame.getWidth(), frame.getHeight());
+	}
+	
+	private void resizeComponents(int width, int height)
+	{
+		menuBar.setBounds(0, 0, width, 20);
+		searchText.setBounds(10, 30, width - 120, 20);
+		searchButton.setBounds(width - 105, 30, 80, 20);
+		shows.setBounds(10, 60, width / 2 - 25, height - 105);
+		times.setBounds(width / 2, 60, width / 2 - 25, height - 105);
+	}
+	
+	public class MainFormActionListener implements ActionListener
+	{
+		public void actionPerformed(ActionEvent e)
+		{
+			if(e.getSource() == searchText || e.getSource() == searchButton)
 			{
 				if(!searchText.getText().isEmpty())
 				{
@@ -58,62 +110,17 @@ public class MainForm
 						
 						searchResult.setVisible(true);
 					}
-					catch (Exception asdf) { 
+					catch (Exception asdf)
+					{ 
 						JOptionPane.showMessageDialog(null, "Database could not be reached. Please check your internet connection and try again."); 
-						}
-				}
-				else
-				{
-					JOptionPane.showMessageDialog(null, "Please enter a search phrase");
-				}
-			}
-		});
-		
-		searchText = new JTextField();
-		searchText.addActionListener(new ActionListener()
-		{
-			public void actionPerformed(ActionEvent e)
-			{
-				if(!searchText.getText().isEmpty())
-				{
-					TheTVDBApi tvdb = new TheTVDBApi("956FCE4039291BF8");
-					try
-					{
-						Search searchResult = new Search(tvdb.searchSeries(searchText.getText(), "en"), form);
-						searchResult.setVisible(true);
 					}
-					catch (Exception asdf) { JOptionPane.showMessageDialog(null, "Database could not be reached. Please check your internet connection and try again.");  }
 				}
 				else
 				{
 					JOptionPane.showMessageDialog(null, "Please enter a search phrase");
 				}
 			}
-		});
-		
-		searchText.setBounds(10, 31, 315, 20);
-		frame.getContentPane().add(searchText);
-		searchText.setColumns(10);
-		
-		shows = new List();
-		shows.setBounds(10, 57, 200, 194);
-		frame.getContentPane().add(shows);
-		
-		times = new List();
-		times.setBounds(224, 57, 200, 194);
-		frame.getContentPane().add(times);
-		
-		JMenuBar menuBar = new JMenuBar();
-		menuBar.setBounds(0, 0, 434, 21);
-		frame.getContentPane().add(menuBar);
-		
-		JMenu mnFile = new JMenu("File");
-		menuBar.add(mnFile);
-		
-		JMenuItem mntmSave = new JMenuItem("Save");
-		mntmSave.addActionListener(new ActionListener()
-		{
-			public void actionPerformed(ActionEvent e)
+			else if(e.getSource() == mntmSave)
 			{
 				JFileChooser fc = new JFileChooser();
 				int val = fc.showSaveDialog(form.frame);
@@ -127,7 +134,7 @@ public class MainForm
 						{
 							file.createNewFile();
 						}
-						catch (IOException e2) { e2.printStackTrace(); }
+						catch (IOException e1) { e1.printStackTrace(); }
 					}
 					
 					PrintWriter writer;
@@ -144,13 +151,7 @@ public class MainForm
 					catch (FileNotFoundException e1) {e1.printStackTrace();}
 				}
 			}
-		});
-		mnFile.add(mntmSave);
-		
-		JMenuItem mntmLoad = new JMenuItem("Load");
-		mntmLoad.addActionListener(new ActionListener()
-		{
-			public void actionPerformed(ActionEvent e)
+			else if(e.getSource() == mntmLoad)
 			{
 				JFileChooser fc = new JFileChooser();
 				int val = fc.showOpenDialog(form.frame);
@@ -187,92 +188,75 @@ public class MainForm
 					}
 				}
 			}
-		});
-		mnFile.add(mntmLoad);
-		
-		JMenuItem mntmExit = new JMenuItem("Exit");
-		mntmExit.addActionListener(new ActionListener()
-		{
-			public void actionPerformed(ActionEvent e)
+			else if(e.getSource() == mntmExit)
 			{
 				form.frame.dispatchEvent(new WindowEvent(form.frame, WindowEvent.WINDOW_CLOSING));
 			}
-		});
-		mnFile.add(mntmExit);
-		
-		JMenu mnExport = new JMenu("Export To...");
-		menuBar.add(mnExport);
-		
-		JMenuItem mntmTwitter = new JMenuItem("Twitter");
-		mntmTwitter.addActionListener(new ActionListener()
-		{
-			public void actionPerformed(ActionEvent e)
+			else if(e.getSource() == mntmTwitter)
 			{
-				//Mitch: Make it export to twitter here
 				String twitString;
 				twitString = "I added ";
 				
-				for(int i=0;i<shows.getItemCount();i++){
-					if(shows.getItemCount() == 1){
+				for(int i=0;i<shows.getItemCount();i++)
+				{
+					if(shows.getItemCount() == 1)
+					{
 						twitString = twitString + shows.getItems()[i] + " ";
 						break;
-					}else if(shows.getItemCount() == 2){
+					}
+					else if(shows.getItemCount() == 2)
+					{
 						twitString = twitString + shows.getItems()[0] + " and " + shows.getItems()[1] + " ";
 						break;
-					}else if( i-1 == shows.getItemCount()){
+					}
+					else if( i-1 == shows.getItemCount())
+					{
 						twitString = twitString + "and "+ shows.getItems()[i] + " ";
 						break;
-					}else{
+					}
+					else
+					{
 						twitString = twitString + shows.getItems()[i] + ", ";
 					}
 				}
 				twitString = twitString + "to Buggy's.";
 				
-				try {
+				try
+				{
 					exportSocial twit = new exportSocial(0, twitString);
-		            if(twit.twitStatus == 1){
+					
+		            if(twit.twitStatus == 1)
+		            {
 		            	System.out.println("Successfully generated URL");
 		            	System.out.println(twit.twitURL);
-		            }else{
+		            }
+		            else
+		            {
 		            	System.out.println("Tweet was too long.");
 		            }
-				} catch (Exception e1) {
-					// TODO Auto-generated catch block
-					System.out.println("ERROR POSTING TO TWITTER");
 				}
-
+				catch (Exception e1) { System.out.println("ERROR POSTING TO TWITTER"); }
 			}
-		});
-		mnExport.add(mntmTwitter);
-		
-		JMenuItem mntmiCal = new JMenuItem("iCal");
-		mntmiCal.addActionListener(new ActionListener()
-		{
-			public void actionPerformed(ActionEvent e)
+			else if(e.getSource() == mntmiCal)
 			{
-				ExportiCal newCalendar = new ExportiCal();
+				/*ExportiCal newCalendar = new ExportiCal();
 				
-				for(int i = 0; i<shows.getItemCount();i++) {
-					try {
+				for(int i = 0; i<shows.getItemCount();i++)
+				{
+					try
+					{
 						newCalendar.addShow(times.getItem(i));
-					} catch (SocketException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
 					}
+					catch (SocketException e1) { e1.printStackTrace(); }
 				}
 				
-				try {
+				try
+				{
 					newCalendar.saveiCalFile();
-				} catch (IOException | ValidationException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
 				}
-				
-				
+				catch (IOException | ValidationException e1) { e1.printStackTrace(); }*/
 			}
-			
-		});
-		mnExport.add(mntmiCal);
+		}
 	}
 	
 	public boolean showAlreadyInList(String showName)
@@ -286,6 +270,9 @@ public class MainForm
 	
 	public boolean addShow(String showName)
 	{
+		if(showAlreadyInList(showName))
+			return false;
+		
 		String addShow;
 		try
 		{
@@ -299,8 +286,11 @@ public class MainForm
 		return true;
 	}
 	
-	public void removeShow(String showName)
+	public boolean removeShow(String showName)
 	{
+		if(!showAlreadyInList(showName))
+			return false;
+		
 		int index;
 		for(index = 0;index<shows.getItems().length;index++)
 			if(shows.getItems()[index].equals(showName))
@@ -308,6 +298,8 @@ public class MainForm
 		
 		shows.remove(index);
 		times.remove(index);
+		
+		return true;
 	}
 
 	public static void main(String[] args)
