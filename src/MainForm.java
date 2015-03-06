@@ -43,6 +43,7 @@ public class MainForm
 	private JMenuItem mntmExit = new JMenuItem("Exit");
 	private JMenu mnExport = new JMenu("Export To...");
 	private JMenuItem mntmTwitter = new JMenuItem("Twitter");
+	private JMenuItem mntmFB = new JMenuItem("Facebook");
 	private JMenuItem mntmiCal = new JMenuItem("iCal");
 
 	public MainForm()
@@ -71,6 +72,7 @@ public class MainForm
 		mntmLoad.addActionListener(listener);
 		mntmExit.addActionListener(listener);
 		mntmTwitter.addActionListener(listener);
+		mntmFB.addActionListener(listener);
 		//mntmiCal.addActionListener(listener);
 		
 		menuBar.add(mnFile);
@@ -81,6 +83,7 @@ public class MainForm
 		mnFile.add(mntmExit);
 		
 		mnExport.add(mntmTwitter);
+		mnExport.add(mntmFB);
 		mnExport.add(mntmiCal);
 		
 		resizeComponents(frame.getWidth(), frame.getHeight());
@@ -236,6 +239,29 @@ public class MainForm
 		            }
 				}
 				catch (Exception e1) { System.out.println("ERROR POSTING TO TWITTER"); }
+			}
+			else if(e.getSource() == mntmFB)
+			{
+				String show;
+				TheTVDBApi tvDB1 = new TheTVDBApi("956FCE4039291BF8");
+				int expids[] = new int[15];
+				for(int i=0;i<shows.getItemCount();i++)
+				{
+					show = shows.getItems()[i];
+					try{
+						expids[i] = Integer.parseInt(tvDB1.searchSeries(show, "en").get(0).getId());
+						}catch (Exception a){	
+						}
+				System.out.println(expids[i]);
+				try {
+					exportSocial face = new exportSocial(1, Integer.toString(expids[i]));
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				}
+				
+				
 			}
 			else if(e.getSource() == mntmiCal)
 			{
