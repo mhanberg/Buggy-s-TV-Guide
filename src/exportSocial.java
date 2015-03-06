@@ -33,15 +33,13 @@ public class exportSocial{
     	}
 	    	
     	
-    	/* Currently non working
-	    // Share by Facebook
+    // Share by Facebook
     	if(network == 1){
-        	faceURL = "http://facebook.com/sharer/sharer.php?message=Test&u=https://github.com/mhanberg/Buggy-s-TV-Guide" + URLEncoder.encode(message, "UTF-8");
+    	faceURL = "http://facebook.com/sharer/sharer.php?u=" + URLEncoder.encode("http://thetvdb.com/?tab=series&id="+message, "UTF-8");
             Desktop d=Desktop.getDesktop();
             d.browse(new URI(faceURL));
             faceStatus = 1;
-    	}
-    	*/
+	}
     	
     	
     
@@ -52,12 +50,11 @@ public class exportSocial{
     	
     	
     	// What network? - Skip Facebook currently non working
-    	/*
+    	
     	System.out.println("Enter 0 for Twitter or 1 for Facebook:");
         Scanner sc = new Scanner(System.in);
         int network = sc.nextInt();
-        */
-    	int network = 0;
+        
         
         // What to post?
     	System.out.println("Please enter your message");
