@@ -41,6 +41,7 @@ public class NextEp {
 		}
 		
 		int size = episodes.size();
+		String retString = "";
 		
 		for (int i = 0; i < size; i++) {
 			Episode episodeData = episodes.get(i);
@@ -71,18 +72,24 @@ public class NextEp {
 			if (date.after(currentDate)) {
 				//String returnString = ("Next episode is: " + date + "\nEpisode airs at: " + fullDetails.getAirsTime());
 				String newString = (show + " - " + episodeData.getEpisodeName() + " - " + concatDate + " - " + fullDetails.getAirsTime());
-				return newString;
+				retString += newString + " | \n";
+				//return newString;
 				/*return*/
 			} else if (curCheck.equals(concatDate) == true) {
 				String newString = (show + " - " + episodeData.getEpisodeName() + " - " + concatDate + " - " + fullDetails.getAirsTime());
-				return newString;
+				retString += newString + " | \n";
+				//return newString;
 			} else {
 
 			}
 		
 		}
 		
-		return "No upcoming episode";
+		if (retString.equals("") == true) {
+			return "No upcoming episode";
+		} else {
+			return retString;
+		}
 		/*if haven't returned yet, return a string that says no upcoming episode */
 	}
 	
