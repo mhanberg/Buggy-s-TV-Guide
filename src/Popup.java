@@ -16,6 +16,7 @@ import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 
@@ -45,7 +46,8 @@ public class Popup extends JFrame
 			{
 				resizeComponents(p.getWidth(), p.getHeight());
 			}
-		});
+		}
+		);
 		
 		name = new JLabel(show.getSeriesName());
 		name.setBounds(10, 11, 315, 14);
@@ -92,48 +94,58 @@ public class Popup extends JFrame
 				
 				p.dispatchEvent(new WindowEvent(p, WindowEvent.WINDOW_CLOSING));
 			}
-		});
+		}
+		);
 		
-		 MouseListener mouseListener = new MouseListener() {
-		      public void mouseClicked(MouseEvent mouseEvent) {
-		        if (mouseEvent.getClickCount() == 2) {
+		 MouseListener mouseListener = new MouseListener() 
+		 {
+		      public void mouseClicked(MouseEvent mouseEvent) 
+		      {
+		        if (mouseEvent.getClickCount() == 2) 
+		        {
 		          int index = actors.getSelectedIndex();
-		          if (index >= 0) {
+		          if (index >= 0) 
+		          {
 		        	  final TheTVDBApi tvdb = new TheTVDBApi("956FCE4039291BF8");
 		        	  java.util.List<Actor> showactors;
-		        	  try{
+		        	  try
+		        	  {
 		        		  showactors = tvdb.getActors(show.getId());
 		        		  Popup p = new Popup(showactors.get(index), form);
 		        		  p.setVisible(true);	  
-		        	  } catch (Exception e){
-
+		        	  } catch (Exception e)
+		        	  {
+		        		  JOptionPane.showMessageDialog(null, "Actor/actress cannot be displayed");
 		        	  }
+		        	  
 		          }
+		          
 		        }
+		        
 		      }
 
 			@Override
-			public void mouseEntered(MouseEvent arg0) {
+			public void mouseEntered(MouseEvent arg0) 
+			{
 				// TODO Auto-generated method stub
-				
 			}
 
 			@Override
-			public void mouseExited(MouseEvent arg0) {
+			public void mouseExited(MouseEvent arg0) 
+			{
 				// TODO Auto-generated method stub
-				
 			}
 
 			@Override
-			public void mousePressed(MouseEvent arg0) {
+			public void mousePressed(MouseEvent arg0) 
+			{
 				// TODO Auto-generated method stub
-				
 			}
 
 			@Override
-			public void mouseReleased(MouseEvent arg0) {
-				// TODO Auto-generated method stub
-				
+			public void mouseReleased(MouseEvent arg0) 
+			{
+				// TODO Auto-generated method stub	
 			}
 		};
 		actors.addMouseListener(mouseListener);
@@ -161,18 +173,21 @@ public class Popup extends JFrame
 		description.setEditable(false);
 		description.setLineWrap(true);
 		description.setWrapStyleWord(true);
+		
 		sp = new JScrollPane(description);
 		sp.setBounds(10, 36, 200, 94);;
 		sp.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		this.getContentPane().add(sp);
 		
 		BufferedImage myPicture;
-		try{
+		try
+		{
 			myPicture = ImageIO.read(new URL(actor.getImage()));
 			JLabel picLabel = new JLabel(new ImageIcon(myPicture));
 			picLabel.setBounds(220, 11, 350,350);
 			this.getContentPane().add(picLabel);
-		} catch (IOException e){
+		} catch (IOException e)
+		{
 			System.out.println("Failed Read");
 		}
 	}
