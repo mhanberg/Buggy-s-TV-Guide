@@ -45,7 +45,7 @@ public class NextEp {
 		
 		for (int i = 0; i < size; i++) {
 			Episode episodeData = episodes.get(i);
-			//System.out.println(episodeData.getFirstAired());
+			
 			String airDate = episodeData.getFirstAired();
 			DateFormat format = new SimpleDateFormat("yyyy-M-d");
 			Date date = null;
@@ -58,27 +58,21 @@ public class NextEp {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			//System.out.println(date);
+			
 
 			Date currentDate = new Date();
 			String curCheck = currentDate.toString();
-			curCheck = curCheck.replaceAll("00:00:00 ", ""); //made it so the year is still kept -Mitch
-			//curCheck = curCheck.substring(0, 10); got rid of this
+			curCheck = curCheck.replaceAll("00:00:00 ", "");
 			String concatDate = date.toString();
-			concatDate = concatDate.replaceAll("00:00:00 ", "");//made it so the year is still kept -Mitch
-			//concatDate = concatDate.substring(0,  10); got rid of this
+			concatDate = concatDate.replaceAll("00:00:00 ", "");
 
 
 			if (date.after(currentDate)) {
-				//String returnString = ("Next episode is: " + date + "\nEpisode airs at: " + fullDetails.getAirsTime());
 				String newString = (show + " - " + episodeData.getEpisodeName() + " - " + concatDate + " - " + fullDetails.getAirsTime());
 				retString += newString + " | \n";
-				//return newString;
-				/*return*/
 			} else if (curCheck.equals(concatDate) == true) {
 				String newString = (show + " - " + episodeData.getEpisodeName() + " - " + concatDate + " - " + fullDetails.getAirsTime());
 				retString += newString + " | \n";
-				//return newString;
 			} else {
 
 			}
@@ -88,6 +82,7 @@ public class NextEp {
 		if (retString.equals("") == true) {
 			return "No upcoming episode";
 		} else {
+			retString = retString.substring(0, retString.length() - 4);
 			return retString;
 		}
 		/*if haven't returned yet, return a string that says no upcoming episode */
