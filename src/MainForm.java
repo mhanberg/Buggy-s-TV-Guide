@@ -11,6 +11,11 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -24,11 +29,13 @@ import javax.swing.JMenuItem;
 //import net.fortuna.ical4j.model.ValidationException;
 import thetvdbapi.*;
 
-public class MainForm
+public class MainForm implements ActionListener
 {
 	private MainForm form = this;
-	private MainFormActionListener listener = new MainFormActionListener();
 	private TheTVDBApi tvdb = new TheTVDBApi("956FCE4039291BF8");
+	private HashMap<String, ArrayList<String>> series = new HashMap<String, ArrayList<String>>();
+	private HashMap<String, Date> dates = new HashMap<String, Date>();
+	private ArrayList<String> sortedDates = new ArrayList<String>();
 	
 	private JFrame frame = new JFrame("Buggy's TV Guide");
 	private JTextField searchText = new JTextField();
@@ -66,14 +73,16 @@ public class MainForm
 		frame.getContentPane().add(times);
 		frame.getContentPane().add(menuBar);
 
-		searchText.addActionListener(listener);
-		searchButton.addActionListener(listener);
-		mntmSave.addActionListener(listener);
-		mntmLoad.addActionListener(listener);
-		mntmExit.addActionListener(listener);
-		mntmTwitter.addActionListener(listener);
-		mntmFB.addActionListener(listener);
-		//mntmiCal.addActionListener(listener);
+		searchText.addActionListener(this);
+		searchButton.addActionListener(this);
+		shows.addActionListener(this);
+		times.addActionListener(this);
+		mntmSave.addActionListener(this);
+		mntmLoad.addActionListener(this);
+		mntmExit.addActionListener(this);
+		mntmTwitter.addActionListener(this);
+		mntmFB.addActionListener(this);
+		//mntmiCal.addActionListener(this);
 		
 		menuBar.add(mnFile);
 		menuBar.add(mnExport);
@@ -85,6 +94,7 @@ public class MainForm
 		mnExport.add(mntmTwitter);
 		mnExport.add(mntmFB);
 		mnExport.add(mntmiCal);
+		
 		
 		resizeComponents(frame.getWidth(), frame.getHeight());
 	}
@@ -98,190 +108,210 @@ public class MainForm
 		times.setBounds(width / 2, 60, width / 2 - 25, height - 105);
 	}
 	
-	public class MainFormActionListener implements ActionListener
+	public void actionPerformed(ActionEvent e)
 	{
-		public void actionPerformed(ActionEvent e)
+		if(e.getSource() == searchText || e.getSource() == searchButton)
 		{
-			if(e.getSource() == searchText || e.getSource() == searchButton)
+			if(!searchText.getText().isEmpty())
 			{
-				if(!searchText.getText().isEmpty())
+				try
 				{
-					TheTVDBApi tvdb = new TheTVDBApi("956FCE4039291BF8");
+					Search searchResult = new Search(tvdb.searchSeries(searchText.getText(), "en"), form);
+					
+					searchResult.setVisible(true);
+				}
+				catch (Exception asdf)
+				{ 
+					JOptionPane.showMessageDialog(null, "Database could not be reached. Please check your internet connection and try again."); 
+				}
+			}
+			else
+			{
+				JOptionPane.showMessageDialog(null, "Please enter a search phrase");
+			}
+		}
+		else if(e.getSource() == shows)
+		{
+			try
+			{
+				Popup p = new Popup(tvdb.getSeries(tvdb.searchSeries(shows.getItem(shows.getSelectedIndex()), "en").get(0).getId(), "en"), form);
+				p.setVisible(true);
+			}
+			catch(Exception popupException) { JOptionPane.showMessageDialog(null, "Connection to server failed. Check your internet connection."); }
+		}
+		else if(e.getSource() == times)
+		{
+			Iterator it = series.entrySet().iterator();
+			
+			while(it.hasNext())
+			{
+				Map.Entry pair = (Map.Entry)it.next();
+				String str = (String)pair.getKey();
+				ArrayList<String> eps = (ArrayList<String>)pair.getValue();
+				
+				if(eps.contains(times.getItem(times.getSelectedIndex())))
+				{
 					try
 					{
-						Search searchResult = new Search(tvdb.searchSeries(searchText.getText(), "en"), form);
+						Popup p = new Popup(tvdb.getSeries(tvdb.searchSeries(str, "en").get(0).getId(), "en"), form);
+						p.setVisible(true);
+					}
+					catch(Exception popupException) { JOptionPane.showMessageDialog(null, "Connection to server failed. Check your internet connection."); }
+					
+					break;
+				}
+			}
+		}
+		else if(e.getSource() == mntmSave)
+		{
+			JFileChooser fc = new JFileChooser();
+			int val = fc.showSaveDialog(form.frame);
+			
+			if(val == JFileChooser.APPROVE_OPTION)
+			{
+				File file = fc.getSelectedFile();
+				if(!file.exists())
+				{
+					try
+					{
+						file.createNewFile();
+					}
+					catch (IOException e1) { e1.printStackTrace(); }
+				}
+				
+				PrintWriter writer;
+				try
+				{
+					writer = new PrintWriter(file);
+					
+					for(int i=0;i<shows.getItemCount();i++)
+						writer.println(shows.getItem(i));
+					
+					writer.flush();
+					writer.close();
+				}
+				catch (FileNotFoundException e1) {e1.printStackTrace();}
+			}
+		}
+		else if(e.getSource() == mntmLoad)
+		{
+			JFileChooser fc = new JFileChooser();
+			int val = fc.showOpenDialog(form.frame);
+			
+			if(val == JFileChooser.APPROVE_OPTION)
+			{
+				File file = fc.getSelectedFile();
+				if(file.exists())
+				{
+					try
+					{
+						BufferedReader br = new BufferedReader(new FileReader(file));
+						shows.removeAll();
+						times.removeAll();
+						String line;
 						
-						searchResult.setVisible(true);
+						while((line = br.readLine()) != null)
+							addShow(line);
+						
+						br.close();
 					}
-					catch (Exception asdf)
-					{ 
-						JOptionPane.showMessageDialog(null, "Database could not be reached. Please check your internet connection and try again."); 
-					}
+					catch (IOException e1) { e1.printStackTrace(); }
 				}
 				else
 				{
-					JOptionPane.showMessageDialog(null, "Please enter a search phrase");
+					JOptionPane.showMessageDialog(form.frame, "File does not exist.");
 				}
 			}
-			else if(e.getSource() == mntmSave)
+		}
+		else if(e.getSource() == mntmExit)
+		{
+			form.frame.dispatchEvent(new WindowEvent(form.frame, WindowEvent.WINDOW_CLOSING));
+		}
+		else if(e.getSource() == mntmTwitter)
+		{
+			String twitString;
+			twitString = "I added ";
+			
+			for(int i=0;i<shows.getItemCount();i++)
 			{
-				JFileChooser fc = new JFileChooser();
-				int val = fc.showSaveDialog(form.frame);
-				
-				if(val == JFileChooser.APPROVE_OPTION)
+				if(shows.getItemCount() == 1)
 				{
-					File file = fc.getSelectedFile();
-					if(!file.exists())
-					{
-						try
-						{
-							file.createNewFile();
-						}
-						catch (IOException e1) { e1.printStackTrace(); }
-					}
-					
-					PrintWriter writer;
-					try
-					{
-						writer = new PrintWriter(file);
-						
-						for(int i=0;i<shows.getItemCount();i++)
-							writer.println(shows.getItem(i));
-						
-						writer.flush();
-						writer.close();
-					}
-					catch (FileNotFoundException e1) {e1.printStackTrace();}
+					twitString = twitString + shows.getItems()[i] + " ";
+					break;
 				}
-			}
-			else if(e.getSource() == mntmLoad)
-			{
-				JFileChooser fc = new JFileChooser();
-				int val = fc.showOpenDialog(form.frame);
-				
-				if(val == JFileChooser.APPROVE_OPTION)
+				else if(shows.getItemCount() == 2)
 				{
-					File file = fc.getSelectedFile();
-					if(file.exists())
-					{
-						try
-						{
-							BufferedReader br = new BufferedReader(new FileReader(file));
-							shows.removeAll();
-							times.removeAll();
-							String line;
-							boolean worked = true;
-							
-							while((line = br.readLine()) != null)
-							{
-								if(!addShow(line))
-									worked = false;
-							}
-							
-							br.close();
-							
-							if(!worked)
-								JOptionPane.showMessageDialog(null, "There was a problem loading your file.");
-						}
-						catch (IOException e1) { e1.printStackTrace(); }
-					}
-					else
-					{
-						JOptionPane.showMessageDialog(form.frame, "File does not exist.");
-					}
+					twitString = twitString + shows.getItems()[0] + " and " + shows.getItems()[1] + " ";
+					break;
 				}
-			}
-			else if(e.getSource() == mntmExit)
-			{
-				form.frame.dispatchEvent(new WindowEvent(form.frame, WindowEvent.WINDOW_CLOSING));
-			}
-			else if(e.getSource() == mntmTwitter)
-			{
-				String twitString;
-				twitString = "I added ";
-				
-				for(int i=0;i<shows.getItemCount();i++)
+				else if( i-1 == shows.getItemCount())
 				{
-					if(shows.getItemCount() == 1)
-					{
-						twitString = twitString + shows.getItems()[i] + " ";
-						break;
-					}
-					else if(shows.getItemCount() == 2)
-					{
-						twitString = twitString + shows.getItems()[0] + " and " + shows.getItems()[1] + " ";
-						break;
-					}
-					else if( i-1 == shows.getItemCount())
-					{
-						twitString = twitString + "and "+ shows.getItems()[i] + " ";
-						break;
-					}
-					else
-					{
-						twitString = twitString + shows.getItems()[i] + ", ";
-					}
+					twitString = twitString + "and "+ shows.getItems()[i] + " ";
+					break;
 				}
-				twitString = twitString + "to Buggy's.";
+				else
+				{
+					twitString = twitString + shows.getItems()[i] + ", ";
+				}
+			}
+			twitString = twitString + "to Buggy's.";
+			
+			try
+			{
+				exportSocial twit = new exportSocial(0, twitString);
+				
+	            if(twit.twitStatus == 1)
+	            {
+	            	System.out.println("Successfully generated URL");
+	            	System.out.println(twit.twitURL);
+	            }
+	            else
+	            {
+	            	System.out.println("Tweet was too long.");
+	            }
+			}
+			catch (Exception e1) { System.out.println("ERROR POSTING TO TWITTER"); }
+		}
+		else if(e.getSource() == mntmFB)
+		{
+			String show;
+			TheTVDBApi tvDB1 = new TheTVDBApi("956FCE4039291BF8");
+			int expids[] = new int[15];
+			
+			for(int i=0;i<shows.getItemCount();i++)
+			{
+				show = shows.getItems()[i];
+				try
+				{
+					expids[i] = Integer.parseInt(tvDB1.searchSeries(show, "en").get(0).getId());
+				}
+				catch (Exception a) { }
 				
 				try
 				{
-					exportSocial twit = new exportSocial(0, twitString);
-					
-		            if(twit.twitStatus == 1)
-		            {
-		            	System.out.println("Successfully generated URL");
-		            	System.out.println(twit.twitURL);
-		            }
-		            else
-		            {
-		            	System.out.println("Tweet was too long.");
-		            }
-				}
-				catch (Exception e1) { System.out.println("ERROR POSTING TO TWITTER"); }
-			}
-			else if(e.getSource() == mntmFB)
-			{
-				String show;
-				TheTVDBApi tvDB1 = new TheTVDBApi("956FCE4039291BF8");
-				int expids[] = new int[15];
-				for(int i=0;i<shows.getItemCount();i++)
-				{
-					show = shows.getItems()[i];
-					try{
-						expids[i] = Integer.parseInt(tvDB1.searchSeries(show, "en").get(0).getId());
-						}catch (Exception a){	
-						}
-				System.out.println(expids[i]);
-				try {
 					exportSocial face = new exportSocial(1, Integer.toString(expids[i]));
-				} catch (Exception e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
 				}
-				}
-				
-				
+				catch (Exception e1) { e1.printStackTrace(); }
 			}
-			else if(e.getSource() == mntmiCal)
+		}
+		else if(e.getSource() == mntmiCal)
+		{
+			/*ExportiCal newCalendar = new ExportiCal();
+			
+			for(int i = 0; i<shows.getItemCount();i++)
 			{
-				/*ExportiCal newCalendar = new ExportiCal();
-				
-				for(int i = 0; i<shows.getItemCount();i++)
-				{
-					try
-					{
-						newCalendar.addShow(times.getItem(i));
-					}
-					catch (SocketException e1) { e1.printStackTrace(); }
-				}
-				
 				try
 				{
-					newCalendar.saveiCalFile();
+					newCalendar.addShow(times.getItem(i));
 				}
-				catch (IOException | ValidationException e1) { e1.printStackTrace(); }*/
+				catch (SocketException e1) { e1.printStackTrace(); }
 			}
+			
+			try
+			{
+				newCalendar.saveiCalFile();
+			}
+			catch (IOException | ValidationException e1) { e1.printStackTrace(); }*/
 		}
 	}
 	
@@ -294,38 +324,62 @@ public class MainForm
 		return false;
 	}
 	
-	public boolean addShow(String showName)
+	public void addShow(String showName)
 	{
-		if(showAlreadyInList(showName))
-			return false;
+		HashMap<String, Date> episodes = NextEp.getEpisodeList(showName);
 		
-		String addShow;
-		try
+		if(episodes == null)
+			return;
+		
+		ArrayList<String> desc = new ArrayList<String>();
+		shows.add(showName);
+		
+		Iterator it = episodes.entrySet().iterator();
+		
+		while(it.hasNext())
 		{
-			NextEp check = new NextEp();
-			addShow = (String)check.nextEp(showName);
-			times.add(addShow);
-			shows.add(showName);
+			Map.Entry pair = (Map.Entry)it.next();
+			String str = (String)pair.getKey();
+			Date date = (Date)pair.getValue();
+			
+			desc.add(str);
+			dates.put(str, date);
+			
+			int i = 0;
+			while(i < sortedDates.size() && dates.get(sortedDates.get(i)).before(date))
+				i++;
+			
+			sortedDates.add(i, str);
+			times.add(str, i);
 		}
-		catch(Exception e) { return false; }
 		
-		return true;
+		series.put(showName, desc);
 	}
 	
-	public boolean removeShow(String showName)
+	public void removeShow(String showName)
 	{
-		if(!showAlreadyInList(showName))
-			return false;
+		Iterator it = series.entrySet().iterator();
 		
-		int index;
-		for(index = 0;index<shows.getItems().length;index++)
-			if(shows.getItems()[index].equals(showName))
+		while(it.hasNext())
+		{
+			Map.Entry pair = (Map.Entry)it.next();
+			String str = (String)pair.getKey();
+			ArrayList<String> desc = (ArrayList<String>)pair.getValue();
+			
+			if(str.equals(showName))
+			{
+				for(String s : desc)
+				{
+					sortedDates.remove(s);
+					times.remove(s);
+					dates.remove(s);
+				}
 				break;
+			}
+		}
 		
-		shows.remove(index);
-		times.remove(index);
-		
-		return true;
+		series.remove(showName);
+		shows.remove(showName);
 	}
 
 	public static void main(String[] args)

@@ -9,6 +9,11 @@ import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 import javax.swing.JTextArea;
 import javax.swing.JButton;
@@ -46,8 +51,7 @@ public class Popup extends JFrame
 			{
 				resizeComponents(p.getWidth(), p.getHeight());
 			}
-		}
-		);
+		});
 		
 		name = new JLabel(show.getSeriesName());
 		name.setBounds(10, 11, 315, 14);
@@ -73,10 +77,24 @@ public class Popup extends JFrame
 		times = new List();
 		this.getContentPane().add(times);
 		
-		String addShow;
-		NextEp check = new NextEp();
-		addShow = (String)check.nextEp(show.getSeriesName());
-		times.add(addShow);
+		HashMap<String, Date> episodes = NextEp.getEpisodeList(show.getSeriesName());
+		
+		if(episodes.size() == 0)
+		{
+			times.add("No Upcoming Episode.");
+		}
+		else
+		{
+			Iterator it = episodes.entrySet().iterator();
+			
+			while(it.hasNext())
+			{
+				Map.Entry pair = (Map.Entry)it.next();
+				String str = (String)pair.getKey();
+				
+				times.add(str);
+			}
+		}
 		
 		String buttonString = "Add";
 		if(form.showAlreadyInList(show.getSeriesName()))

@@ -12,7 +12,7 @@ public class TestApi {
 		
 		
 		NextEp check = new NextEp();
-		System.out.println(check.nextEp("The Simpsons"));
+		//System.out.println(check.nextEp("The Simpsons"));
 		
 		/*if haven't returned yet, return a string that says no upcoming episode */
 	}
