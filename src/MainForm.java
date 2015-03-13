@@ -26,7 +26,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 
-//import net.fortuna.ical4j.model.ValidationException;
+import net.fortuna.ical4j.model.ValidationException;
 import thetvdbapi.*;
 
 public class MainForm implements ActionListener
