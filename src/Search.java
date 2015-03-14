@@ -1,14 +1,19 @@
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JTextField;
+
 import java.util.List;
 import java.util.ArrayList;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JList;
 import javax.swing.DefaultListModel;
+
 import thetvdbapi.TheTVDBApi;
 import thetvdbapi.model.*;
 
@@ -36,7 +41,8 @@ public class Search extends JFrame
 			ids.add(searchResults.get(i).getId());
 		}
 		
-		if (searchResults.size() == 0){
+		if (searchResults.size() == 0)
+		{
 			listModel.addElement("No serch results available");		
 		}
 		
@@ -72,8 +78,63 @@ public class Search extends JFrame
 		btnNewButton.setBounds(325, 225, 100, 23);
 		getContentPane().add(btnNewButton);
 		
-		if (searchResults.size() == 0){
+		if (searchResults.size() == 0)
+		{
 			btnNewButton.setEnabled(false);	
 		}
+		
+		MouseListener mouseListener = new MouseListener() 
+		 {
+		      public void mouseClicked(MouseEvent mouseEvent) 
+		      {
+		        if (mouseEvent.getClickCount() == 2) 
+		        {
+		          int index = list.getSelectedIndex();
+		          if (index >= 0) 
+		          {
+		        	  try
+		        	  {
+		        		  Popup p = new Popup(tvdb.getSeries(ids.get(list.getSelectedIndex()), "en"), form);
+		        		  p.setVisible(true);  
+		        	  } catch (Exception popupException)
+		        	  {
+		        		  JOptionPane.showMessageDialog(null, "Connection to server failed. Check your internet connection.");
+		        	  }  
+		          }
+		          else
+		          {
+						JOptionPane.showMessageDialog(null, "Please choose a show");
+		          }
+		          
+		        }
+		        
+		      }
+
+			@Override
+			public void mouseEntered(MouseEvent arg0) 
+			{
+				// TODO Auto-generated method stub
+			}
+
+			@Override
+			public void mouseExited(MouseEvent arg0) 
+			{
+				// TODO Auto-generated method stub
+			}
+
+			@Override
+			public void mousePressed(MouseEvent arg0) 
+			{
+				// TODO Auto-generated method stub
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent arg0) 
+			{
+				// TODO Auto-generated method stub	
+			}
+		};
+		list.addMouseListener(mouseListener);
+		
 	}
 }

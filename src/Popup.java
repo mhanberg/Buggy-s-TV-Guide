@@ -106,14 +106,68 @@ public class Popup extends JFrame
 			public void actionPerformed(ActionEvent e)
 			{
 				if(form.showAlreadyInList(show.getSeriesName()))
+				{
 					form.removeShow(show.getSeriesName());
+				}
 				else
+				{
 					form.addShow(show.getSeriesName());
+				}
 				
 				p.dispatchEvent(new WindowEvent(p, WindowEvent.WINDOW_CLOSING));
 			}
 		}
 		);
+		
+		MouseListener mouseListenerAdd = new MouseListener() 
+		 {
+		      public void mouseClicked(MouseEvent mouseEvent) 
+		      {
+		        if (mouseEvent.getClickCount() == 2) 
+		        {
+		          int index = times.getSelectedIndex();
+		          if (index >= 0) 
+		          {
+		        	  if(form.showAlreadyInList(show.getSeriesName()))
+		        	  {
+		        		  form.removeShow(show.getSeriesName());
+		        		  addButton.setText("Add");
+		        	  }
+		        	  else
+		        	  {
+		        		  form.addShow(show.getSeriesName());
+		        		  addButton.setText("Remove");
+		        	  }
+		          }
+		        }
+		      }
+
+			@Override
+			public void mouseEntered(MouseEvent arg0) 
+			{
+				// TODO Auto-generated method stub
+			}
+
+			@Override
+			public void mouseExited(MouseEvent arg0) 
+			{
+				// TODO Auto-generated method stub
+			}
+
+			@Override
+			public void mousePressed(MouseEvent arg0) 
+			{
+				// TODO Auto-generated method stub
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent arg0) 
+			{
+				// TODO Auto-generated method stub	
+			}
+		};
+		times.addMouseListener(mouseListenerAdd);
+	
 		
 		 MouseListener mouseListener = new MouseListener() 
 		 {
@@ -129,8 +183,8 @@ public class Popup extends JFrame
 		        	  try
 		        	  {
 		        		  showactors = tvdb.getActors(show.getId());
-		        		  Popup p = new Popup(showactors.get(index), form);
-		        		  p.setVisible(true);	  
+		        		  Actors a = new Actors(showactors.get(index), form);
+		        		  a.setVisible(true);	  
 		        	  } catch (Exception e)
 		        	  {
 		        		  JOptionPane.showMessageDialog(null, "Actor/actress cannot be displayed");
@@ -171,43 +225,6 @@ public class Popup extends JFrame
 		this.getContentPane().add(addButton);
 		
 		resizeComponents(p.getWidth(), p.getHeight());
-	}
-	
-	public Popup(final Actor actor, final MainForm form)
-	{
-		super(actor.getName());
-		final Popup p = this;
-		this.setBounds(250, 250, 600, 400);
-		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		this.getContentPane().setLayout(null);
-		
-		JLabel name = new JLabel(actor.getName());
-		name.setBounds(10, 11, 200, 14);
-		this.getContentPane().add(name);
-		
-		description = new JTextArea(actor.getRole());
-		description.setBounds(10, 36, 200, 94);
-		description.setColumns(10);
-		description.setEditable(false);
-		description.setLineWrap(true);
-		description.setWrapStyleWord(true);
-		
-		sp = new JScrollPane(description);
-		sp.setBounds(10, 36, 200, 94);;
-		sp.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		this.getContentPane().add(sp);
-		
-		BufferedImage myPicture;
-		try
-		{
-			myPicture = ImageIO.read(new URL(actor.getImage()));
-			JLabel picLabel = new JLabel(new ImageIcon(myPicture));
-			picLabel.setBounds(220, 11, 350,350);
-			this.getContentPane().add(picLabel);
-		} catch (IOException e)
-		{
-			System.out.println("Failed Read");
-		}
 	}
 	
 	private void resizeComponents(int width, int height)
