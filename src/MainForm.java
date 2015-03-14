@@ -11,6 +11,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -82,7 +83,7 @@ public class MainForm implements ActionListener
 		mntmExit.addActionListener(this);
 		mntmTwitter.addActionListener(this);
 		mntmFB.addActionListener(this);
-		//mntmiCal.addActionListener(this);
+		mntmiCal.addActionListener(this);
 		
 		menuBar.add(mnFile);
 		menuBar.add(mnExport);
@@ -296,23 +297,33 @@ public class MainForm implements ActionListener
 		}
 		else if(e.getSource() == mntmiCal)
 		{
-			/*ExportiCal newCalendar = new ExportiCal();
 			
-			for(int i = 0; i<shows.getItemCount();i++)
+			ExportiCal newCalendar = new ExportiCal();
+			
+			Iterator it = dates.entrySet().iterator();
+
+			while(it.hasNext())
 			{
-				try
-				{
-					newCalendar.addShow(times.getItem(i));
+				Map.Entry pair = (Map.Entry)it.next();
+				String str = (String)pair.getKey();
+				Date d = (Date)pair.getValue();
+				
+				try {
+					newCalendar.addShow(str, d);
+				} catch (SocketException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
 				}
-				catch (SocketException e1) { e1.printStackTrace(); }
+				
 			}
 			
 			try
 			{
 				newCalendar.saveiCalFile();
 			}
-			catch (IOException | ValidationException e1) { e1.printStackTrace(); }*/
-		}
+			catch (IOException | ValidationException e1) { e1.printStackTrace(); }
+			
+		} 
 	}
 	
 	public boolean showAlreadyInList(String showName)
