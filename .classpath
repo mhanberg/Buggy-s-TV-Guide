@@ -15,11 +15,11 @@
 	<classpathentry kind="lib" path="src/lib/jna-platform-4.1.0.jar"/>
 	<classpathentry kind="lib" path="src/lib/slf4j-api-1.7.10.jar"/>
 	<classpathentry kind="lib" path="src/lib/slf4j-simple-1.7.10.jar"/>
-	<classpathentry kind="lib" path="src/lib/backport-util-concurrent-3.1.jar"/>
-	<classpathentry kind="lib" path="src/lib/commons-codec-1.8.jar"/>
-	<classpathentry kind="lib" path="src/lib/commons-lang-2.6.jar"/>
-	<classpathentry kind="lib" path="src/lib/commons-logging-1.1.3.jar"/>
-	<classpathentry kind="lib" path="src/lib/groovy-all-2.1.7.jar"/>
-	<classpathentry kind="lib" path="src/lib/ical4j-1.0.6.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Zwolf11/Documents/GitHub/Buggy-s-TV-Guide/src/lib/backport-util-concurrent-3.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Zwolf11/Documents/GitHub/Buggy-s-TV-Guide/src/lib/commons-codec-1.8.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Zwolf11/Documents/GitHub/Buggy-s-TV-Guide/src/lib/commons-lang-2.6.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Zwolf11/Documents/GitHub/Buggy-s-TV-Guide/src/lib/commons-logging-1.1.3.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Zwolf11/Documents/GitHub/Buggy-s-TV-Guide/src/lib/groovy-all-2.1.7.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Zwolf11/Documents/GitHub/Buggy-s-TV-Guide/src/lib/ical4j-1.0.6.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
