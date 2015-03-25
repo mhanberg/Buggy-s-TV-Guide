@@ -3,7 +3,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import  thetvdbapi.*;
+import thetvdbapi.*;
 import thetvdbapi.model.*;
 
 public class NextEp
@@ -24,6 +24,10 @@ public class NextEp
 			return null;
 		
 		Series series = results.get(0);
+		
+		if(!series.getSeriesName().equals(show))
+			return null;
+		
 		String id = series.getId();
 		Series fullDetails = null;
 		

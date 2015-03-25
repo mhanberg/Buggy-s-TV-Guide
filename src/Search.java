@@ -1,11 +1,9 @@
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JTextField;
-
 import java.util.List;
 import java.util.ArrayList;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
@@ -13,14 +11,15 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JList;
 import javax.swing.DefaultListModel;
+import javax.swing.JButton;
+import javax.swing.JFrame;
 
 import thetvdbapi.TheTVDBApi;
 import thetvdbapi.model.*;
 
-
 public class Search extends JFrame
 {
-	private JTextField textField;
+	private Search search = this;
 	private JList list;
 	private DefaultListModel listModel;
 	JScrollPane scroll;
@@ -33,6 +32,14 @@ public class Search extends JFrame
 		setBounds(150, 150, 450, 300);
 		getContentPane().setLayout(null);
 		
+		this.addComponentListener(new ComponentAdapter()
+		{
+			public void componentResized(ComponentEvent e)
+			{
+				resizeComponents(search.getWidth(), search.getHeight());
+			}
+		});
+		
 		listModel = new DefaultListModel();
 		
 		for (int i=0; i<searchResults.size(); i++)
@@ -43,16 +50,13 @@ public class Search extends JFrame
 		
 		if (searchResults.size() == 0)
 		{
-			listModel.addElement("No serch results available");		
+			listModel.addElement("No search results available");
 		}
 		
 		final TheTVDBApi tvdb = new TheTVDBApi("956FCE4039291BF8");
 		list = new JList(listModel);
-
-		list.setBounds(10, 10, 440, 250);
+		
 		scroll = new JScrollPane(list);
-		scroll.setSize(415, 200);
-		scroll.setLocation(10, 10);
 		getContentPane().add(scroll);
 		
 		btnNewButton = new JButton("Details");
@@ -75,7 +79,6 @@ public class Search extends JFrame
 				}
 			}
 		});
-		btnNewButton.setBounds(325, 225, 100, 23);
 		getContentPane().add(btnNewButton);
 		
 		if (searchResults.size() == 0)
@@ -136,5 +139,13 @@ public class Search extends JFrame
 		};
 		list.addMouseListener(mouseListener);
 		
+		resizeComponents(this.getWidth(), this.getHeight());
+	}
+	
+	private void resizeComponents(int width, int height)
+	{
+		list.setBounds(10, 10, width - 10, height - 50);
+		scroll.setBounds(10, 10, width - 35, height - 100);
+		btnNewButton.setBounds(width - 125, height - 75, 100, 25);
 	}
 }

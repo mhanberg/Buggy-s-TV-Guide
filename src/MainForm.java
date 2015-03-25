@@ -29,6 +29,7 @@ import javax.swing.JMenuItem;
 
 import net.fortuna.ical4j.model.ValidationException;
 import thetvdbapi.*;
+import thetvdbapi.model.Series;
 
 public class MainForm implements ActionListener
 {
@@ -96,7 +97,6 @@ public class MainForm implements ActionListener
 		mnExport.add(mntmFB);
 		mnExport.add(mntmiCal);
 		
-		
 		resizeComponents(frame.getWidth(), frame.getHeight());
 	}
 	
@@ -117,9 +117,26 @@ public class MainForm implements ActionListener
 			{
 				try
 				{
-					Search searchResult = new Search(tvdb.searchSeries(searchText.getText(), "en"), form);
+					java.util.List<Series> results = tvdb.searchSeries(searchText.getText(), "en");
 					
-					searchResult.setVisible(true);
+					if(results.isEmpty())
+					{
+						JOptionPane.showMessageDialog(null, "No Results");
+					}
+					else if(results.size() == 1)
+					{
+						try
+						{
+							Popup p = new Popup(results.get(0), form);
+							p.setVisible(true);
+						}
+						catch(Exception popupException) { JOptionPane.showMessageDialog(null, "Connection to server failed. Check your internet connection."); }
+					}
+					else
+					{
+						Search searchResult = new Search(results, form);
+						searchResult.setVisible(true);
+					}
 				}
 				catch (Exception asdf)
 				{ 
@@ -179,6 +196,17 @@ public class MainForm implements ActionListener
 					}
 					catch (IOException e1) { e1.printStackTrace(); }
 				}
+				else
+				{
+					int result = JOptionPane.showConfirmDialog(fc, "The file exists, overwrite?", "Existing file", JOptionPane.YES_NO_CANCEL_OPTION);
+		            switch(result)
+		            {
+		                case JOptionPane.YES_OPTION:
+		                	break;
+		                default:
+		                	return;
+		            }
+				}
 				
 				PrintWriter writer;
 				try
@@ -206,9 +234,12 @@ public class MainForm implements ActionListener
 				{
 					try
 					{
-						BufferedReader br = new BufferedReader(new FileReader(file));
 						shows.removeAll();
 						times.removeAll();
+						sortedDates.clear();
+						dates.clear();
+						
+						BufferedReader br = new BufferedReader(new FileReader(file));
 						String line;
 						
 						while((line = br.readLine()) != null)
@@ -271,12 +302,11 @@ public class MainForm implements ActionListener
 	            	System.out.println("Tweet was too long.");
 	            }
 			}
-			catch (Exception e1) { System.out.println("ERROR POSTING TO TWITTER"); }
+			catch (Exception e1) { JOptionPane.showMessageDialog(null, "Error posting to Twitter."); }
 		}
 		else if(e.getSource() == mntmFB)
 		{
 			String show;
-			TheTVDBApi tvDB1 = new TheTVDBApi("956FCE4039291BF8");
 			int expids[] = new int[15];
 			
 			for(int i=0;i<shows.getItemCount();i++)
@@ -284,7 +314,7 @@ public class MainForm implements ActionListener
 				show = shows.getItems()[i];
 				try
 				{
-					expids[i] = Integer.parseInt(tvDB1.searchSeries(show, "en").get(0).getId());
+					expids[i] = Integer.parseInt(tvdb.searchSeries(show, "en").get(0).getId());
 				}
 				catch (Exception a) { }
 				
@@ -297,7 +327,6 @@ public class MainForm implements ActionListener
 		}
 		else if(e.getSource() == mntmiCal)
 		{
-			
 			ExportiCal newCalendar = new ExportiCal();
 			
 			Iterator it = dates.entrySet().iterator();
@@ -308,13 +337,11 @@ public class MainForm implements ActionListener
 				String str = (String)pair.getKey();
 				Date d = (Date)pair.getValue();
 				
-				try {
+				try
+				{
 					newCalendar.addShow(str, d);
-				} catch (SocketException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
 				}
-				
+				catch (SocketException e1) { e1.printStackTrace(); }
 			}
 			
 			try
@@ -322,7 +349,6 @@ public class MainForm implements ActionListener
 				newCalendar.saveiCalFile();
 			}
 			catch (IOException | ValidationException e1) { e1.printStackTrace(); }
-			
 		} 
 	}
 	
@@ -337,10 +363,16 @@ public class MainForm implements ActionListener
 	
 	public void addShow(String showName)
 	{
+		if(showAlreadyInList(showName))
+			return;
+		
 		HashMap<String, Date> episodes = NextEp.getEpisodeList(showName);
 		
 		if(episodes == null)
+		{
+			JOptionPane.showMessageDialog(null, "Error adding show " + showName);
 			return;
+		}
 		
 		ArrayList<String> desc = new ArrayList<String>();
 		shows.add(showName);
