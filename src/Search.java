@@ -32,14 +32,6 @@ public class Search extends JFrame
 		setBounds(150, 150, 450, 300);
 		getContentPane().setLayout(null);
 		
-		this.addComponentListener(new ComponentAdapter()
-		{
-			public void componentResized(ComponentEvent e)
-			{
-				resizeComponents(search.getWidth(), search.getHeight());
-			}
-		});
-		
 		listModel = new DefaultListModel();
 		
 		for (int i=0; i<searchResults.size(); i++)
