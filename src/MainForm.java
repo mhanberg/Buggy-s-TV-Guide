@@ -193,17 +193,6 @@ public class MainForm implements ActionListener
 					}
 					catch (IOException e1) { e1.printStackTrace(); }
 				}
-				else
-				{
-					int result = JOptionPane.showConfirmDialog(fc, "The file exists, overwrite?", "Existing file", JOptionPane.YES_NO_CANCEL_OPTION);
-		            switch(result)
-		            {
-		                case JOptionPane.YES_OPTION:
-		                	break;
-		                default:
-		                	return;
-		            }
-				}
 				
 				PrintWriter writer;
 				try
@@ -231,11 +220,6 @@ public class MainForm implements ActionListener
 				{
 					try
 					{
-						shows.removeAll();
-						times.removeAll();
-						sortedDates.clear();
-						dates.clear();
-						
 						BufferedReader br = new BufferedReader(new FileReader(file));
 						String line;
 						
@@ -432,9 +416,6 @@ public class MainForm implements ActionListener
 	
 	public void addShow(String showName)
 	{
-		if(showAlreadyInList(showName))
-			return;
-		
 		HashMap<String, Date> episodes = NextEp.getEpisodeList(showName);
 		
 		if(episodes == null)
