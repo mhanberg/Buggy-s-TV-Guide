@@ -26,6 +26,7 @@ import javax.swing.JButton;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import net.fortuna.ical4j.model.ValidationException;
 import thetvdbapi.*;
@@ -39,7 +40,7 @@ public class MainForm implements ActionListener
 	private HashMap<String, Date> dates = new HashMap<String, Date>();
 	private ArrayList<String> sortedDates = new ArrayList<String>();
 	
-	private JFrame frame = new JFrame("Buggy's TV Guide");
+	JFrame frame = new JFrame("Buggy's TV Guide");
 	private JTextField searchText = new JTextField();
 	private JButton searchButton = new JButton("Search");
 	private List shows = new List();
@@ -261,14 +262,15 @@ public class MainForm implements ActionListener
 		}
 		else if(e.getSource() == mntmTwitter)
 		{
-			if (shows.getItemCount() > 0) {
-				try {
+			if (shows.getItemCount() > 0)
+			{
+				try
+				{
 					tvdb.searchSeries(shows.getItems()[0], "en").get(0).getId();
 					
 					String twitString;
 					twitString = "I added ";
-				
-
+					
 					for(int i=0;i<shows.getItemCount();i++)
 					{
 						if(shows.getItemCount() == 1)
@@ -310,82 +312,117 @@ public class MainForm implements ActionListener
 						}
 					}
 					catch (Exception e1) { JOptionPane.showMessageDialog(null, "Error posting to Twitter."); }
-					
-				} catch (Exception a) {
-					JOptionPane.showMessageDialog(null, "Database could not be reached. Please check your internet connection and try again.");
 				}
-				
-				
-
-			} else {
+				catch (Exception a) { JOptionPane.showMessageDialog(null, "Database could not be reached. Please check your internet connection and try again."); }
+			}
+			else
+			{
 				JOptionPane.showMessageDialog(frame, "You haven't added any shows yet!", "Twitter", JOptionPane.WARNING_MESSAGE);
 			}
 		}
 		else if(e.getSource() == mntmFB)
 		{
-			
-			if (shows.getItemCount() > 0) {
+			if (shows.getItemCount() > 0)
+			{
 				String show;
 				int expids[] = new int[15];
 				
-
 				for(int i=0;i<shows.getItemCount();i++)
 				{
 					show = shows.getItems()[i];
+					
 					try
 					{
 						expids[i] = Integer.parseInt(tvdb.searchSeries(show, "en").get(0).getId());
 					}
-					catch (Exception a) { 
-						JOptionPane.showMessageDialog(null, "Database could not be reached. Please check your internet connection and try again."); 
-					}
-
+					catch (Exception a) { JOptionPane.showMessageDialog(null, "Database could not be reached. Please check your internet connection and try again."); }
+					
 					try
 					{
 						exportSocial face = new exportSocial(1, Integer.toString(expids[i]));
 					}
 					catch (Exception e1) { e1.printStackTrace(); }
 				}
-			} else {
+			}
+			else
+			{
 				JOptionPane.showMessageDialog(frame, "You haven't added any shows yet!", "Facebook", JOptionPane.WARNING_MESSAGE);
 			}
 		}
 		else if(e.getSource() == mntmiCal)
 		{
-			ExportiCal newCalendar = new ExportiCal();
+			if(times.getItemCount() == 0)
+			{
+				JOptionPane.showMessageDialog(frame, "No upcoming episodes to export!", "iCal", JOptionPane.WARNING_MESSAGE);
+				return;
+			}
 			
-			Iterator it = dates.entrySet().iterator();
+			JFileChooser fc = new JFileChooser();
+			FileNameExtensionFilter filter = new FileNameExtensionFilter("iCalendar file (.ics)", "ics", "iCal");
+			fc.setFileFilter(filter);
+			int val = fc.showSaveDialog(form.frame);
 			
-			if(it.hasNext()) {
-
-				while(it.hasNext())
+			if(val == JFileChooser.APPROVE_OPTION)
+			{
+				File file = fc.getSelectedFile();
+				String ext = "";
+				if(file.getName().lastIndexOf('.') != -1)
+					ext = file.getName().substring(file.getName().lastIndexOf('.'));
+				
+				if (!ext.equalsIgnoreCase(".ics"))
+				    file = new File(file.toString() + ".ics");
+				
+				if(!file.exists())
 				{
-					Map.Entry pair = (Map.Entry)it.next();
-					String str = (String)pair.getKey();
-					Date d = (Date)pair.getValue();
-
 					try
 					{
-						newCalendar.addShow(str, d);
+						file.createNewFile();
 					}
-					catch (SocketException e1) { e1.printStackTrace(); }
+					catch (IOException e1) { e1.printStackTrace(); }
 				}
-
-				try
+				else
 				{
-					newCalendar.saveiCalFile();
-					JOptionPane.showMessageDialog(frame,  ".ics file saved to your program directory!","iCal", JOptionPane.INFORMATION_MESSAGE);
+					int result = JOptionPane.showConfirmDialog(fc, "The file exists, overwrite?", "Existing file", JOptionPane.YES_NO_CANCEL_OPTION);
+		            switch(result)
+		            {
+		                case JOptionPane.YES_OPTION:
+		                	break;
+		                default:
+		                	return;
+		            }
 				}
-				catch (IOException | ValidationException e1) { 
-					e1.printStackTrace();
-					JOptionPane.showMessageDialog(frame,  ".ics file failed to output","iCal", JOptionPane.WARNING_MESSAGE);
+			
+				ExportiCal newCalendar = new ExportiCal();
+				
+				Iterator it = dates.entrySet().iterator();
+				
+				if(it.hasNext())
+				{
+					while(it.hasNext())
+					{
+						Map.Entry pair = (Map.Entry)it.next();
+						String str = (String)pair.getKey();
+						Date d = (Date)pair.getValue();
+	
+						try
+						{
+							newCalendar.addShow(str, d);
+						}
+						catch (SocketException e1) { e1.printStackTrace(); }
 					}
-			
-			} else {
-				JOptionPane.showMessageDialog(frame, "You haven't added any shows yet!", "iCal", JOptionPane.WARNING_MESSAGE);
+	
+					try
+					{
+						newCalendar.saveiCalFile(file);
+					}
+					catch (IOException | ValidationException e1) { JOptionPane.showMessageDialog(frame, ".ics file failed to output", "iCal", JOptionPane.WARNING_MESSAGE); }
+				}
+				else
+				{
+					JOptionPane.showMessageDialog(frame, "You haven't added any shows yet!", "iCal", JOptionPane.WARNING_MESSAGE);
+				}
 			}
-		} 
-			
+		}
 	}
 	
 	public boolean showAlreadyInList(String showName)
