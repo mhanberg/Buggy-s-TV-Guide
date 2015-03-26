@@ -120,11 +120,7 @@ public class MainForm implements ActionListener
 				{
 					java.util.List<Series> results = tvdb.searchSeries(searchText.getText(), "en");
 					
-					if(results.isEmpty())
-					{
-						JOptionPane.showMessageDialog(null, "No Results");
-					}
-					else if(results.size() == 1)
+					if(results.size() == 1)
 					{
 						try
 						{
@@ -133,7 +129,7 @@ public class MainForm implements ActionListener
 						}
 						catch(Exception popupException) { JOptionPane.showMessageDialog(null, "Connection to server failed. Check your internet connection."); }
 					}
-					else
+					else if(results.size() > 1)
 					{
 						Search searchResult = new Search(results, form);
 						searchResult.setVisible(true);
