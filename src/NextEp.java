@@ -54,7 +54,7 @@ public class NextEp
 		{
 			Episode episodeData = episodes.get(i);
 			String airDate = episodeData.getFirstAired();
-			DateFormat format = new SimpleDateFormat("yyyy-M-d-hh:mm a");
+			DateFormat format = new SimpleDateFormat("yyyy-M-d");
 			Date date = null;
 			
 			try
@@ -62,7 +62,7 @@ public class NextEp
 				if (airDate.equals(""))
 					continue;
 				
-				date = format.parse(airDate + "-" + fullDetails.getAirsTime());
+				date = format.parse(airDate);
 			}
 			catch (ParseException e)
 			{
