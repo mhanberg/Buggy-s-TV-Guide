@@ -26,7 +26,13 @@ public class exportSocial{
 		        twitStatus = 1;
 	    	}else{
 	    		// Too long
-	    		System.out.println("Tweet is too long!");
+	    		message = "I added a lot of shows to Buggy's";
+	    		// Format URL
+		    	twitURL = "http://twitter.com/intent/tweet?text=" + URLEncoder.encode(message, "UTF-8")+ "&via=BuggysTV"+"&related=BuggysTV";
+		  
+		    	// Post tweet
+		        Desktop d=Desktop.getDesktop();
+		        d.browse(new URI(twitURL));
 	    		twitStatus = 0;
 	    	}
 	    	return;
@@ -35,7 +41,7 @@ public class exportSocial{
     	
     // Share by Facebook
     	if(network == 1){
-    	faceURL = "http://facebook.com/sharer/sharer.php?u=" + URLEncoder.encode("http://thetvdb.com/?tab=series&id="+message, "UTF-8");
+    		faceURL = "http://facebook.com/sharer/sharer.php?u=" + URLEncoder.encode("http://thetvdb.com/?tab=series&id="+message, "UTF-8");
             Desktop d=Desktop.getDesktop();
             d.browse(new URI(faceURL));
             faceStatus = 1;

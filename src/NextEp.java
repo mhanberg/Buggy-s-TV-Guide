@@ -3,6 +3,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import javax.swing.JOptionPane;
+
 import thetvdbapi.*;
 import thetvdbapi.model.*;
 
@@ -18,7 +20,9 @@ public class NextEp
 		{
 			results = tvDB.searchSeries(show, "en");
 		}
-		catch (Exception a) { }
+		catch (Exception a) {
+			JOptionPane.showMessageDialog(null, "Database could not be reached. Please check your internet connection and try again.");
+		}
 		
 		if(results.isEmpty())
 			return null;

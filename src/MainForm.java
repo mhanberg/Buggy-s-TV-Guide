@@ -261,68 +261,93 @@ public class MainForm implements ActionListener
 		}
 		else if(e.getSource() == mntmTwitter)
 		{
-			String twitString;
-			twitString = "I added ";
-			
-			for(int i=0;i<shows.getItemCount();i++)
-			{
-				if(shows.getItemCount() == 1)
-				{
-					twitString = twitString + shows.getItems()[i] + " ";
-					break;
-				}
-				else if(shows.getItemCount() == 2)
-				{
-					twitString = twitString + shows.getItems()[0] + " and " + shows.getItems()[1] + " ";
-					break;
-				}
-				else if( i-1 == shows.getItemCount())
-				{
-					twitString = twitString + "and "+ shows.getItems()[i] + " ";
-					break;
-				}
-				else
-				{
-					twitString = twitString + shows.getItems()[i] + ", ";
-				}
-			}
-			twitString = twitString + "to Buggy's.";
-			
-			try
-			{
-				exportSocial twit = new exportSocial(0, twitString);
+			if (shows.getItemCount() > 0) {
+				try {
+					tvdb.searchSeries(shows.getItems()[0], "en").get(0).getId();
+					
+					String twitString;
+					twitString = "I added ";
 				
-	            if(twit.twitStatus == 1)
-	            {
-	            	System.out.println("Successfully generated URL");
-	            	System.out.println(twit.twitURL);
-	            }
-	            else
-	            {
-	            	System.out.println("Tweet was too long.");
-	            }
+
+					for(int i=0;i<shows.getItemCount();i++)
+					{
+						if(shows.getItemCount() == 1)
+						{
+							twitString = twitString + shows.getItems()[i] + " ";
+							break;
+						}
+						else if(shows.getItemCount() == 2)
+						{
+							twitString = twitString + shows.getItems()[0] + " and " + shows.getItems()[1] + " ";
+							break;
+						}
+						else if( i-1 == shows.getItemCount())
+						{
+							twitString = twitString + "and "+ shows.getItems()[i] + " ";
+							break;
+						}
+						else
+						{
+							twitString = twitString + shows.getItems()[i] + ", ";
+						}
+					}
+					twitString = twitString + "to Buggy's.";
+
+					try
+					{
+						exportSocial twit = new exportSocial(0, twitString);
+
+						if(twit.twitStatus == 1)
+						{
+							System.out.println("Successfully generated URL");
+							System.out.println(twit.twitURL);
+						}
+						else
+						{
+							System.out.println("Tweet was too long, shortened tweet.");
+							System.out.println("Successfully generated URL");
+							System.out.println(twit.twitURL);
+						}
+					}
+					catch (Exception e1) { JOptionPane.showMessageDialog(null, "Error posting to Twitter."); }
+					
+				} catch (Exception a) {
+					JOptionPane.showMessageDialog(null, "Database could not be reached. Please check your internet connection and try again.");
+				}
+				
+				
+
+			} else {
+				JOptionPane.showMessageDialog(frame, "You haven't added any shows yet!", "Twitter", JOptionPane.WARNING_MESSAGE);
 			}
-			catch (Exception e1) { JOptionPane.showMessageDialog(null, "Error posting to Twitter."); }
 		}
 		else if(e.getSource() == mntmFB)
 		{
-			String show;
-			int expids[] = new int[15];
 			
-			for(int i=0;i<shows.getItemCount();i++)
-			{
-				show = shows.getItems()[i];
-				try
-				{
-					expids[i] = Integer.parseInt(tvdb.searchSeries(show, "en").get(0).getId());
-				}
-				catch (Exception a) { }
+			if (shows.getItemCount() > 0) {
+				String show;
+				int expids[] = new int[15];
 				
-				try
+
+				for(int i=0;i<shows.getItemCount();i++)
 				{
-					exportSocial face = new exportSocial(1, Integer.toString(expids[i]));
+					show = shows.getItems()[i];
+					try
+					{
+						expids[i] = Integer.parseInt(tvdb.searchSeries(show, "en").get(0).getId());
+					}
+					catch (Exception a) { 
+						JOptionPane.showMessageDialog(null, "Database could not be reached. Please check your internet connection and try again."); 
+					}
+
+					try
+					{
+						exportSocial face = new exportSocial(1, Integer.toString(expids[i]));
+					}
+					catch (Exception e1) { e1.printStackTrace(); }
 				}
-				catch (Exception e1) { e1.printStackTrace(); }
+			} else {
+				JOptionPane.showMessageDialog(frame, "You haven't added any shows yet!", "Facebook", JOptionPane.WARNING_MESSAGE);
 			}
 		}
 		else if(e.getSource() == mntmiCal)
@@ -330,26 +355,37 @@ public class MainForm implements ActionListener
 			ExportiCal newCalendar = new ExportiCal();
 			
 			Iterator it = dates.entrySet().iterator();
+			
+			if(it.hasNext()) {
 
-			while(it.hasNext())
-			{
-				Map.Entry pair = (Map.Entry)it.next();
-				String str = (String)pair.getKey();
-				Date d = (Date)pair.getValue();
-				
+				while(it.hasNext())
+				{
+					Map.Entry pair = (Map.Entry)it.next();
+					String str = (String)pair.getKey();
+					Date d = (Date)pair.getValue();
+
+					try
+					{
+						newCalendar.addShow(str, d);
+					}
+					catch (SocketException e1) { e1.printStackTrace(); }
+				}
+
 				try
 				{
-					newCalendar.addShow(str, d);
+					newCalendar.saveiCalFile();
+					JOptionPane.showMessageDialog(frame,  ".ics file saved to your program directory!","iCal", JOptionPane.INFORMATION_MESSAGE);
 				}
-				catch (SocketException e1) { e1.printStackTrace(); }
-			}
+				catch (IOException | ValidationException e1) { 
+					e1.printStackTrace();
+					JOptionPane.showMessageDialog(frame,  ".ics file failed to output","iCal", JOptionPane.WARNING_MESSAGE);
+					}
 			
-			try
-			{
-				newCalendar.saveiCalFile();
+			} else {
+				JOptionPane.showMessageDialog(frame, "You haven't added any shows yet!", "iCal", JOptionPane.WARNING_MESSAGE);
 			}
-			catch (IOException | ValidationException e1) { e1.printStackTrace(); }
 		} 
+			
 	}
 	
 	public boolean showAlreadyInList(String showName)
