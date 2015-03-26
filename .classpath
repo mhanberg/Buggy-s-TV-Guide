@@ -21,5 +21,6 @@
 	<classpathentry kind="lib" path="src/lib/commons-logging-1.1.3.jar"/>
 	<classpathentry kind="lib" path="src/lib/groovy-all-2.1.7.jar"/>
 	<classpathentry kind="lib" path="src/lib/ical4j-1.0.6.jar"/>
+	<classpathentry kind="lib" path="/Users/mitchell/git/Buggy-s-TV-Guide/src/lib/commons-io-2.4.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

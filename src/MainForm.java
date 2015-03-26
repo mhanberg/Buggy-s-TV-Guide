@@ -39,7 +39,7 @@ public class MainForm implements ActionListener
 	private HashMap<String, Date> dates = new HashMap<String, Date>();
 	private ArrayList<String> sortedDates = new ArrayList<String>();
 	
-	private JFrame frame = new JFrame("Buggy's TV Guide");
+	JFrame frame = new JFrame("Buggy's TV Guide");
 	private JTextField searchText = new JTextField();
 	private JButton searchButton = new JButton("Search");
 	private List shows = new List();
@@ -373,8 +373,7 @@ public class MainForm implements ActionListener
 
 				try
 				{
-					newCalendar.saveiCalFile();
-					JOptionPane.showMessageDialog(frame,  ".ics file saved to your program directory!","iCal", JOptionPane.INFORMATION_MESSAGE);
+					newCalendar.saveiCalFile(form);
 				}
 				catch (IOException | ValidationException e1) { 
 					e1.printStackTrace();

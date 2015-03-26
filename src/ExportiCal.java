@@ -1,15 +1,15 @@
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.net.SocketException;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.HashMap;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
+import org.apache.commons.io.FilenameUtils;
 
 import net.fortuna.ical4j.data.CalendarOutputter;
 import net.fortuna.ical4j.model.DateTime;
@@ -74,11 +74,44 @@ public class ExportiCal {
 	
 	}
 	
-	public void saveiCalFile() throws IOException, ValidationException {
+	public void saveiCalFile(MainForm form) throws IOException, ValidationException {
+		JFileChooser fc = new JFileChooser();
+		FileNameExtensionFilter filter = new FileNameExtensionFilter("iCal File","ics");
+		fc.setFileFilter(filter);
+		int val = fc.showSaveDialog(form.frame);
 		
-		FileOutputStream fout = new FileOutputStream("myshows.ics");
+		if(val == JFileChooser.APPROVE_OPTION)
+		{
+			File file = fc.getSelectedFile();
+			if(!file.exists())
+			{
+				try
+				{
+					file.createNewFile();
+					if (FilenameUtils.getExtension(file.getName()).equalsIgnoreCase("ics")) {
+					    
+					} else {
+					    file = new File(file.getParentFile(), FilenameUtils.getBaseName(file.getName())+".ics"); 
+					}
+				}
+				catch (IOException e1) { e1.printStackTrace(); }
+			}
+			else
+			{
+				int result = JOptionPane.showConfirmDialog(fc, "The file exists, overwrite?", "Existing file", JOptionPane.YES_NO_CANCEL_OPTION);
+				switch(result)
+				{
+				case JOptionPane.YES_OPTION:
+					break;
+				default:
+					return;
+				}
+			}
+			FileOutputStream fout = new FileOutputStream(file);
 
-		CalendarOutputter outputter = new CalendarOutputter();
-		outputter.output(this.icsCalendar, fout);
+			CalendarOutputter outputter = new CalendarOutputter();
+			outputter.output(this.icsCalendar, fout);
+		
+		}
 	}
 }
