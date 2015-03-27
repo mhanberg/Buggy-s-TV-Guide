@@ -56,19 +56,12 @@ public class Search extends JFrame
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				if(list.getSelectedIndex() != -1)
+				try
 				{
-					try
-					{
-						Popup p = new Popup(tvdb.getSeries(ids.get(list.getSelectedIndex()), "en"), form);
-						p.setVisible(true);
-					}
-					catch(Exception popupException) { JOptionPane.showMessageDialog(null, "Connection to server failed. Check your internet connection.");}
+					Popup p = new Popup(tvdb.getSeries(ids.get(list.getSelectedIndex()), "en"), form);
+					p.setVisible(true);
 				}
-				else
-				{
-					JOptionPane.showMessageDialog(null, "Please choose a show");
-				}
+				catch(Exception popupException) { JOptionPane.showMessageDialog(null, "Connection to server failed. Check your internet connection.");}
 			}
 		});
 		

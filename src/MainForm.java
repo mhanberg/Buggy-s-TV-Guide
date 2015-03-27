@@ -270,7 +270,11 @@ public class MainForm implements ActionListener
 						}
 						else
 						{
-							twitString = twitString + shows.getItems()[i] + ", ";
+							if(i == 0){
+								twitString = twitString + shows.getItems()[i] + ", ";
+							}else{
+								twitString = twitString + shows.getItems()[i-1] + ", ";
+							}
 						}
 					}
 					twitString = twitString + "to Buggy's.";
@@ -297,12 +301,20 @@ public class MainForm implements ActionListener
 			}
 			else
 			{
-				JOptionPane.showMessageDialog(frame, "You haven't added any shows yet!", "Twitter", JOptionPane.WARNING_MESSAGE);
+				String twitString;
+				twitString = "null";
+				try
+				{
+					exportSocial twit = new exportSocial(0, twitString);
+				}catch (Exception e1) { JOptionPane.showMessageDialog(null, "Error posting to Twitter."); }
 			}
-		}
+				
+				
+			
+			}
 		else if(e.getSource() == mntmFB)
 		{
-			if (shows.getItemCount() > 0)
+			if (shows.getItemCount() == 1)
 			{
 				String show;
 				int expids[] = new int[15];
