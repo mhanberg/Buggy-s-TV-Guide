@@ -125,12 +125,10 @@ public class Popup extends JFrame
 		        	  if(form.showAlreadyInList(show.getSeriesName()))
 		        	  {
 		        		  form.removeShow(show.getSeriesName());
-		        		  addButton.setText("Add");
 		        	  }
 		        	  else
 		        	  {
 		        		  form.addShow(show.getSeriesName());
-		        		  addButton.setText("Remove");
 		        	  }
 		          }
 		        }

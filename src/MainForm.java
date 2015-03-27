@@ -120,11 +120,7 @@ public class MainForm implements ActionListener
 				{
 					java.util.List<Series> results = tvdb.searchSeries(searchText.getText(), "en");
 					
-					if(results.isEmpty())
-					{
-						JOptionPane.showMessageDialog(null, "No Results");
-					}
-					else if(results.size() == 1)
+					if(results.size() == 1)
 					{
 						try
 						{
@@ -133,7 +129,7 @@ public class MainForm implements ActionListener
 						}
 						catch(Exception popupException) { JOptionPane.showMessageDialog(null, "Connection to server failed. Check your internet connection."); }
 					}
-					else
+					else if(results.size() > 1)
 					{
 						Search searchResult = new Search(results, form);
 						searchResult.setVisible(true);
@@ -197,17 +193,6 @@ public class MainForm implements ActionListener
 					}
 					catch (IOException e1) { e1.printStackTrace(); }
 				}
-				else
-				{
-					int result = JOptionPane.showConfirmDialog(fc, "The file exists, overwrite?", "Existing file", JOptionPane.YES_NO_CANCEL_OPTION);
-		            switch(result)
-		            {
-		                case JOptionPane.YES_OPTION:
-		                	break;
-		                default:
-		                	return;
-		            }
-				}
 				
 				PrintWriter writer;
 				try
@@ -235,11 +220,6 @@ public class MainForm implements ActionListener
 				{
 					try
 					{
-						shows.removeAll();
-						times.removeAll();
-						sortedDates.clear();
-						dates.clear();
-						
 						BufferedReader br = new BufferedReader(new FileReader(file));
 						String line;
 						
@@ -436,9 +416,6 @@ public class MainForm implements ActionListener
 	
 	public void addShow(String showName)
 	{
-		if(showAlreadyInList(showName))
-			return;
-		
 		HashMap<String, Date> episodes = NextEp.getEpisodeList(showName);
 		
 		if(episodes == null)

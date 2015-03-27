@@ -32,14 +32,6 @@ public class Search extends JFrame
 		setBounds(150, 150, 450, 300);
 		getContentPane().setLayout(null);
 		
-		this.addComponentListener(new ComponentAdapter()
-		{
-			public void componentResized(ComponentEvent e)
-			{
-				resizeComponents(search.getWidth(), search.getHeight());
-			}
-		});
-		
 		listModel = new DefaultListModel();
 		
 		for (int i=0; i<searchResults.size(); i++)
@@ -86,58 +78,6 @@ public class Search extends JFrame
 			btnNewButton.setEnabled(false);	
 		}
 		
-		MouseListener mouseListener = new MouseListener() 
-		 {
-		      public void mouseClicked(MouseEvent mouseEvent) 
-		      {
-		        if (mouseEvent.getClickCount() == 2) 
-		        {
-		          int index = list.getSelectedIndex();
-		          if (index >= 0) 
-		          {
-		        	  try
-		        	  {
-		        		  Popup p = new Popup(tvdb.getSeries(ids.get(list.getSelectedIndex()), "en"), form);
-		        		  p.setVisible(true);  
-		        	  } catch (Exception popupException)
-		        	  {
-		        		  JOptionPane.showMessageDialog(null, "Connection to server failed. Check your internet connection.");
-		        	  }  
-		          }
-		          else
-		          {
-						JOptionPane.showMessageDialog(null, "Please choose a show");
-		          }
-		          
-		        }
-		        
-		      }
-
-			@Override
-			public void mouseEntered(MouseEvent arg0) 
-			{
-				// TODO Auto-generated method stub
-			}
-
-			@Override
-			public void mouseExited(MouseEvent arg0) 
-			{
-				// TODO Auto-generated method stub
-			}
-
-			@Override
-			public void mousePressed(MouseEvent arg0) 
-			{
-				// TODO Auto-generated method stub
-			}
-
-			@Override
-			public void mouseReleased(MouseEvent arg0) 
-			{
-				// TODO Auto-generated method stub	
-			}
-		};
-		list.addMouseListener(mouseListener);
 		
 		resizeComponents(this.getWidth(), this.getHeight());
 	}
