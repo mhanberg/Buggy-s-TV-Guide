@@ -80,10 +80,9 @@ public class NextEp
 			if(date != null)
 				concatDate = date.toString().substring(0, date.toString().indexOf(':')-2);
 			concatDate = concatDate.replaceAll("00:00:00 ", "");
-				retEpisodes.put("No upcoming episode", null);
 
 			if (date != null && date.compareTo(currentDate) >= 0) {
-				retEpisodes.put(show + " - " + episodeData.getEpisodeName(), date);
+				retEpisodes.put(show + " - " + episodeData.getEpisodeName() + " - " + concatDate + " - " + fullDetails.getAirsTime(), date);
 			}
 		}
 		
