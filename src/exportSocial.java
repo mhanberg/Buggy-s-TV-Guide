@@ -15,8 +15,6 @@ public class exportSocial{
      	
     	// Share by Twitter
     	if(network == 0){
-    		// Make sure message is of appropriate length
-	    	if(message.length() <= 126){
 		    	// Format URL
 		    	twitURL = "http://twitter.com/intent/tweet?text=" + URLEncoder.encode(message, "UTF-8")+ "&via=BuggysTV"+"&related=BuggysTV";
 		  
@@ -24,17 +22,7 @@ public class exportSocial{
 		        Desktop d=Desktop.getDesktop();
 		        d.browse(new URI(twitURL));
 		        twitStatus = 1;
-	    	}else{
-	    		// Too long
-	    		message = "I added a lot of shows to Buggy's";
-	    		// Format URL
-		    	twitURL = "http://twitter.com/intent/tweet?text=" + URLEncoder.encode(message, "UTF-8")+ "&via=BuggysTV"+"&related=BuggysTV";
-		  
-		    	// Post tweet
-		        Desktop d=Desktop.getDesktop();
-		        d.browse(new URI(twitURL));
-	    		twitStatus = 0;
-	    	}
+
 	    	return;
     	}
 	    	

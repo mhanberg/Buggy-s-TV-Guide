@@ -297,9 +297,17 @@ public class MainForm implements ActionListener
 			}
 			else
 			{
-				JOptionPane.showMessageDialog(frame, "You haven't added any shows yet!", "Twitter", JOptionPane.WARNING_MESSAGE);
+				String twitString;
+				twitString = "null";
+				try
+				{
+					exportSocial twit = new exportSocial(0, twitString);
+				}catch (Exception e1) { JOptionPane.showMessageDialog(null, "Error posting to Twitter."); }
 			}
-		}
+				
+				
+			
+			}
 		else if(e.getSource() == mntmFB)
 		{
 			if (shows.getItemCount() > 0)
