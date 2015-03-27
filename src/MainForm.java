@@ -310,7 +310,7 @@ public class MainForm implements ActionListener
 			}
 		else if(e.getSource() == mntmFB)
 		{
-			if (shows.getItemCount() > 0)
+			if (shows.getItemCount() == 1)
 			{
 				String show;
 				int expids[] = new int[15];
