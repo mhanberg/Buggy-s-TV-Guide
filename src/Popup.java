@@ -43,7 +43,7 @@ public class Popup extends JFrame
 		{
 			public void componentResized(ComponentEvent e)
 			{
-				resizeComponents(p.getWidth(), p.getHeight());
+				//resizeComponents(p.getWidth(), p.getHeight());
 			}
 		});
 		
