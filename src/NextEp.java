@@ -54,7 +54,7 @@ public class NextEp
 		{
 			Episode episodeData = episodes.get(i);
 			String airDate = episodeData.getFirstAired();
-			DateFormat format = new SimpleDateFormat("yyyy-M-d");
+			DateFormat format = new SimpleDateFormat("yyyy-M-d-hh:mm a");
 			Date date = null;
 			
 			try
@@ -62,7 +62,7 @@ public class NextEp
 				if (airDate.equals(""))
 					continue;
 				
-				date = format.parse(airDate);
+				date = format.parse(airDate + "-" + fullDetails.getAirsTime());
 			}
 			catch (ParseException e)
 			{
@@ -81,9 +81,8 @@ public class NextEp
 				concatDate = date.toString().substring(0, date.toString().indexOf(':')-2);
 			concatDate = concatDate.replaceAll("00:00:00 ", "");
 
-			if (date != null && date.compareTo(currentDate) >= 0) {
+			if (date != null && date.compareTo(currentDate) >= 0)
 				retEpisodes.put(show + " - " + episodeData.getEpisodeName() + " - " + concatDate + " - " + fullDetails.getAirsTime(), date);
-			}
 		}
 		
 		return retEpisodes;
