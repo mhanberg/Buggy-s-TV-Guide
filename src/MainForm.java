@@ -453,24 +453,6 @@ public class MainForm implements ActionListener
 	{
 		Iterator it = series.entrySet().iterator();
 		
-		while(it.hasNext())
-		{
-			Map.Entry pair = (Map.Entry)it.next();
-			String str = (String)pair.getKey();
-			ArrayList<String> desc = (ArrayList<String>)pair.getValue();
-			
-			if(str.equals(showName))
-			{
-				for(String s : desc)
-				{
-					sortedDates.remove(s);
-					times.remove(s);
-					dates.remove(s);
-				}
-				break;
-			}
-		}
-		
 		series.remove(showName);
 		shows.remove(showName);
 	}
