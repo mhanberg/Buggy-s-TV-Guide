@@ -91,8 +91,6 @@ public class Popup extends JFrame
 		}
 		
 		String buttonString = "Add";
-		if(form.showAlreadyInList(show.getSeriesName()))
-			buttonString = "Remove";
 		
 		addButton = new JButton(buttonString);
 		addButton.addActionListener(new ActionListener()
@@ -213,6 +211,7 @@ public class Popup extends JFrame
 			}
 		};
 		actors.addMouseListener(mouseListener);
+		
 
 		this.getContentPane().add(addButton);
 		
