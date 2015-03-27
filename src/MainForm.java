@@ -331,11 +331,7 @@ public class MainForm implements ActionListener
 		}
 		else if(e.getSource() == mntmiCal)
 		{
-			if(times.getItemCount() == 0)
-			{
-				JOptionPane.showMessageDialog(frame, "No upcoming episodes to export!", "iCal", JOptionPane.WARNING_MESSAGE);
-				return;
-			}
+			
 			
 			JFileChooser fc = new JFileChooser();
 			FileNameExtensionFilter filter = new FileNameExtensionFilter("iCalendar file (.ics)", "ics", "iCal");
@@ -346,11 +342,11 @@ public class MainForm implements ActionListener
 			{
 				File file = fc.getSelectedFile();
 				String ext = "";
-				if(file.getName().lastIndexOf('.') != -1)
-					ext = file.getName().substring(file.getName().lastIndexOf('.'));
-				
-				if (!ext.equalsIgnoreCase(".ics"))
-				    file = new File(file.toString() + ".ics");
+			    if(file.getName().lastIndexOf('.') != -1)
+			     ext = file.getName().substring(file.getName().lastIndexOf('.'));
+			    
+			    
+			       file = new File(file.toString() + ".ics");
 				
 				if(!file.exists())
 				{
@@ -389,6 +385,7 @@ public class MainForm implements ActionListener
 							newCalendar.addShow(str, d);
 						}
 						catch (SocketException e1) { e1.printStackTrace(); }
+						break;
 					}
 	
 					try

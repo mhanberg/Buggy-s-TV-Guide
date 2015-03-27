@@ -40,9 +40,10 @@ public class ExportiCal
 		
 		java.util.Calendar startDate = new GregorianCalendar();
 		startDate.setTime(d);
+		startDate.set(java.util.Calendar.HOUR, 0);
 		java.util.Calendar endDate = new GregorianCalendar();
 		endDate.setTime(d);
-		endDate.add(java.util.Calendar.HOUR_OF_DAY, 1);
+		endDate.set(java.util.Calendar.HOUR, 0);
 		
 		// Create the event
 		String[] info = name.split(" - ");
