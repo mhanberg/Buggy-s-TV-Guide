@@ -62,11 +62,6 @@ public class Search extends JFrame
 					p.setVisible(true);
 				}
 				catch(Exception popupException) { JOptionPane.showMessageDialog(null, "Connection to server failed. Check your internet connection.");}
-
-				/*else
-				{
-					JOptionPane.showMessageDialog(null, "Please choose a show");
-				}*/
 			}
 		});
 		
