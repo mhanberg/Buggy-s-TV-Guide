@@ -176,7 +176,7 @@ public class Popup extends JFrame
 		        		  a.setVisible(true);	  
 		        	  } catch (Exception e)
 		        	  {
-		        		  JOptionPane.showMessageDialog(null, "Actor/actress cannot be displayed");
+		        		  //JOptionPane.showMessageDialog(null, "Actor/actress cannot be displayed");
 		        	  }
 		        	  
 		          }
