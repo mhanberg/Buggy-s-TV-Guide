@@ -270,7 +270,11 @@ public class MainForm implements ActionListener
 						}
 						else
 						{
-							twitString = twitString + shows.getItems()[i] + ", ";
+							if(i == 0){
+								twitString = twitString + shows.getItems()[i] + ", ";
+							}else{
+								twitString = twitString + shows.getItems()[i-1] + ", ";
+							}
 						}
 					}
 					twitString = twitString + "to Buggy's.";
