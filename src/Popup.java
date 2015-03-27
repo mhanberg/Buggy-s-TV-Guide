@@ -63,7 +63,6 @@ public class Popup extends JFrame
 		description.setColumns(10);
 		description.setEditable(false);
 		description.setLineWrap(true);
-		description.setWrapStyleWord(true);
 		sp = new JScrollPane(description);
 		sp.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		this.getContentPane().add(sp);
